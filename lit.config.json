@@ -1,6 +1,5 @@
 {
-  "default": {
-    "projectName": "lit_actions",
-    "templateVersion": "v0.0.1"
-  }
+  "projectName": "lit_actions",
+  "templatesRoot": "templates",
+  "selectedTemplate": "v0.0.1"
 }

@@ -35,11 +35,15 @@ import fs from 'fs-extra';
 //     },
 //   ]);
 
-//   return templatePath;
+//   return `${projectDir()}templates/templatePath`;
 // };
 
 const fixPath = (path) => {
   return path == './' ? '' : path.endsWith('/') ? path : `${path}/`;
+};
+
+const getTemplatePath = (templateName) => {
+  return `${projectDir()}${LIT_CONFIG.templatesRoot}/${templateName}`;
 };
 
 export const initFunc = async ({ args }) => {
@@ -53,9 +57,7 @@ export const initFunc = async ({ args }) => {
   //   `);
 
   // const templatePath = askWhichTemplate();
-  const templatePath = `${projectDir()}templates/${
-    LIT_CONFIG.default.templateVersion
-  }`;
+  const templatePath = getTemplatePath(LIT_CONFIG.selectedTemplate);
 
   let _srcDir;
 
@@ -74,7 +76,7 @@ export const initFunc = async ({ args }) => {
     _srcDir = fixPath(srcDir);
   }
 
-  const projectName = LIT_CONFIG.default.projectName;
+  const projectName = LIT_CONFIG.projectName;
 
   // append / to the end of the srcDir if it doesn't have one
 
