@@ -1,5 +1,15 @@
 {
   "projectName": "lit_actions",
   "templatesRoot": "templates",
-  "selectedTemplate": "v0.0.1"
+  "selectedTemplate": "ts",
+  "buildConfig": {
+    "defaultSrcFileName": "index.action",
+    "inFileExt": ".ts",
+    "outFileExt": ".js",
+    "srcDir": "src",
+    "outDir": "out"
+  },
+  "schemaPaths": {
+    "litActionSchema": "$schemas/lit-action-schema.json"
+  }
 }

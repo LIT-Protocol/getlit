@@ -5,6 +5,7 @@ import { getArgs, readProjectJsonFile, redLog } from './utils.mjs';
 import { docsFunc } from './scripts/docs.mjs';
 import { helpFunc } from './scripts/help.mjs';
 import { initFunc } from './scripts/init.mjs';
+import { buildFunc } from './scripts/build.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -15,8 +16,8 @@ const commandMaps = new Map([
   [
     ['init', 'here'],
     {
-      usage: 'getlit init [?project-name]',
-      description: '🏗️  Initialise a new Lit project',
+      usage: 'getlit here',
+      description: '🏁 Initialise a new Lit project',
       fn: initFunc,
     },
   ],
@@ -24,12 +25,20 @@ const commandMaps = new Map([
     ['docs', 'doc'],
     {
       usage: 'getlit docs',
-      description: '📜 Open the Lit Protocol documentation',
+      description: '📖 Open the Lit Protocol documentation',
       fn: docsFunc,
     },
   ],
   [
-    ['help', 'default'],
+    ['build'],
+    {
+      usage: 'getlit build',
+      description: '🏗  Build your Lit Actions',
+      fn: buildFunc,
+    },
+  ],
+  [
+    ['help', 'default', 'show'],
     {
       usage: 'getlit help',
       description: '🆘 Show the help menu',
@@ -64,12 +73,17 @@ const setup = () => {
 
   const _args = args.slice(1);
 
-  try {
-    item[1].fn({ commandMaps, args: _args });
-  } catch (e) {
-    // default
-    item.fn({ commandMaps, args: _args });
-  }
+  item[1].fn({ commandMaps, args: _args });
+
+  // try {
+  //   item[1].fn({ commandMaps, args: _args });
+  // } catch (e) {
+  //   try {
+  //     item.fn({ commandMaps, args: _args });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 };
 
 setup();

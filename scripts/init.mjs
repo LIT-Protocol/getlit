@@ -2,7 +2,7 @@ import {
   createDirs,
   greenLog,
   listDirsRecursive,
-  projectDir,
+  thisSdkDir,
 } from '../utils.mjs';
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
@@ -12,7 +12,7 @@ import fs from 'fs-extra';
  * @returns {string} the path to the template
  */
 // const askWhichTemplate = async () => {
-//   const dirs = await listDirsRecursive(`${projectDir()}/templates`, false);
+//   const dirs = await listDirsRecursive(`${thisSdkDir()}/templates`, false);
 
 //   const dirNames = dirs.map((dir) => {
 //     return dir.split('/').pop();
@@ -35,7 +35,7 @@ import fs from 'fs-extra';
 //     },
 //   ]);
 
-//   return `${projectDir()}templates/templatePath`;
+//   return `${thisSdkDir()}templates/templatePath`;
 // };
 
 const fixPath = (path) => {
@@ -43,18 +43,11 @@ const fixPath = (path) => {
 };
 
 const getTemplatePath = (templateName) => {
-  return `${projectDir()}${LIT_CONFIG.templatesRoot}/${templateName}`;
+  return `${thisSdkDir()}${LIT_CONFIG.templatesRoot}/${templateName}`;
 };
 
 export const initFunc = async ({ args }) => {
   const PROMPT_DIR = args[0];
-
-  //   greenLog(`
-  // Usage: getlit init [options]
-
-  // Options:
-  //   -h, --help      output usage information
-  //   `);
 
   // const templatePath = askWhichTemplate();
   const templatePath = getTemplatePath(LIT_CONFIG.selectedTemplate);
@@ -64,7 +57,17 @@ export const initFunc = async ({ args }) => {
   if (PROMPT_DIR !== undefined) {
     _srcDir = fixPath(PROMPT_DIR);
   } else {
+    greenLog(`
+    Usage: getlit here [options]
+    
+    Options:
+    
+      <project-name>  The name of the project
+      
+        `);
+
     // ask user which direcotry they want to install the project in, default ./
+    // TODO: check if there's a 'src' directory and use that as the default
     const { srcDir } = await inquirer.prompt([
       {
         type: 'input',
@@ -82,14 +85,14 @@ export const initFunc = async ({ args }) => {
 
   const installLocation = `${process.cwd()}/${_srcDir}${projectName}`;
 
-  greenLog(`Creating your project at ${installLocation}`);
+  greenLog(`🎉 The project has been installed at ${installLocation}`);
 
   // copy the template to the current directory
   try {
     // check if installLocation exists
     createDirs(installLocation);
-
     await fs.copy(templatePath, installLocation);
+    process.exit();
   } catch (e) {
     console.log(e);
   }

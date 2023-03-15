@@ -49,7 +49,7 @@ export async function readJsonFile(filename) {
 }
 
 export function readProjectJsonFile(filename) {
-  const filePath = projectDir() + filename;
+  const filePath = thisSdkDir() + filename;
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
 }
@@ -322,6 +322,22 @@ export const listDirsRecursive = async (dir, recursive = true) => {
   return dirs;
 };
 
+export const tree = async (dir, recursive = false) => {
+  const files = await fs.promises.readdir(dir, { withFileTypes: true });
+  const dirs = [];
+  for (const file of files) {
+    if (file.isDirectory()) {
+      const path = join(dir, file.name);
+      dirs.push(path);
+
+      if (recursive) {
+        dirs.push(...(await listDirsRecursive(path)));
+      }
+    }
+  }
+  return dirs;
+};
+
 export const findImportsFromDir = async (dir) => {
   const files = await fs.promises.readdir(dir, { withFileTypes: true });
 
@@ -499,12 +515,12 @@ export const versionChecker = (pkg, lernaVersion) => {
 
 export const getPackageVersion = () => {
   const pkg = JSON.parse(
-    fs.readFileSync(`${projectDir()}/package.json`, 'utf8')
+    fs.readFileSync(`${thisSdkDir()}/package.json`, 'utf8')
   );
   return pkg.version;
 };
 
-export const projectDir = () => {
+export const thisSdkDir = () => {
   const __dirname = new URL('.', import.meta.url).pathname;
 
   return __dirname;

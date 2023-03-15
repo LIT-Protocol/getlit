@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "VAR": { "type": "string" },
+    "NAME": { "type": "string" },
+    "DESCRIPTION": { "type": "string" },
+    "AUTHOR": { "type": "string" },
+    "VERSION": { "type": "string" }
+  },
+  "required": ["VAR"]
+}
