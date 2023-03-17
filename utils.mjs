@@ -4,11 +4,21 @@ import { exec, spawn } from 'child_process';
 import { exit } from 'process';
 import readline from 'readline';
 import { join } from 'path';
-import events from 'events';
-import util from 'util';
-const eventsEmitter = new events.EventEmitter();
+import * as LitJsSdk from '@lit-protocol/lit-node-client-nodejs';
 
 const rl = readline.createInterface(process.stdin, process.stdout);
+
+export { LitJsSdk };
+
+try {
+  Array.prototype.asyncForEach = async function (callback) {
+    for (let index = 0; index < this.length; index++) {
+      await callback(this[index], index, this);
+    }
+  };
+} catch (e) {
+  // swallow
+}
 
 /**
  * replaceAutogen - Replaces the content between the specified start and end delimiters
@@ -41,6 +51,70 @@ export const replaceAutogen = ({
   return newStr;
 };
 
+/**
+
+Recursively finds directories matching a given search term, starting from a specified directory.
+@param {string} dir - The directory to start searching from.
+@param {string} [searchTerm=LIT_CONFIG.projectName] - The directory name to search for.
+@param {number} [depth=4] - The maximum depth to search.
+@returns {Promise<string[]>} paths - An array of found directories matching the search term.
+*/
+export async function findDirs(
+  dir,
+  searchTerm = LIT_CONFIG.projectName,
+  depth = 4
+) {
+  const files = fs.readdirSync(dir);
+  let paths = [];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const filePath = path.join(dir, file);
+    const stat = fs.lstatSync(filePath);
+
+    if (stat.isDirectory()) {
+      if (file === searchTerm) {
+        paths.push(filePath);
+      } else if (depth > 0) {
+        const subPaths = await findDirs(filePath, searchTerm, depth - 1);
+        paths = paths.concat(subPaths);
+      }
+    }
+  }
+
+  return paths;
+}
+
+export const getLitProjectMetaData = async () => {
+  const litProjectWorkingDir = process.cwd();
+
+  // let litProjectPath;
+
+  const litProjectPaths = await findDirs(litProjectWorkingDir);
+
+  const workingDir = litProjectPaths[0];
+
+  return {
+    all: litProjectPaths,
+    dir: workingDir,
+    src: workingDir + '/' + LIT_CONFIG.buildConfig.srcDir + '/',
+    out: workingDir + '/' + LIT_CONFIG.buildConfig.outDir + '/',
+    test: workingDir + '/' + LIT_CONFIG.buildConfig.testDir + '/',
+  };
+};
+
+export const humanizeBytes = (bytes) => {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  if (bytes === 0) return 'n/a';
+
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+
+  if (i === 0) return `${bytes} ${sizes[i]}`;
+
+  return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+};
+
 // read the file and return as json
 export async function readJsonFile(filename) {
   const filePath = path.join(process.cwd(), filename);
@@ -52,6 +126,12 @@ export function readProjectJsonFile(filename) {
   const filePath = thisSdkDir() + filename;
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
+}
+
+export function readSdkFile(filename) {
+  const filePath = thisSdkDir() + filename;
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  return fileContents;
 }
 
 export async function readFile(filename) {
@@ -192,8 +272,6 @@ export const spawnProcess = (
       exit();
     }
 
-    eventsEmitter.emit(eventName);
-
     if (opt?.onDone) {
       opt?.onDone(exitCode);
     }
@@ -255,6 +333,21 @@ export const greenLog = (msg, noDash = false) => {
   } else {
     console.log('\x1b[32m%s\x1b[0m', msg);
   }
+};
+
+export const usageLog = ({ usage, options }) => {
+  const optionsStr = options.map((option) => {
+    return `    <${option.name}>  ${option.description}`;
+  });
+
+  greenLog(`
+  Usage: ${usage} [options]
+  
+  Options:
+  
+    ${optionsStr}
+    
+      `);
 };
 
 export const yellowLog = (msg, noDash = false) => {

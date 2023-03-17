@@ -3,9 +3,11 @@ import esbuild from 'esbuild';
 import {
   redLog,
   greenLog,
-  readJsonFile,
-  thisSdkDir,
   readProjectJsonFile,
+  asyncForEach,
+  humanizeBytes,
+  yellowLog,
+  findDirs,
 } from '../utils.mjs';
 import path from 'path';
 import Ajv from 'ajv';
@@ -17,6 +19,21 @@ function checkConfigProperty(property, propertyName) {
   }
 }
 
+/**
+Extracts key-value pairs from a given content string using a provided schema.
+This function searches for keys specified in the schema.properties object
+within the content string and extracts their corresponding values using
+regular expressions. The extracted key-value pairs are stored in an object
+and returned.
+@param {string} content - The content string to extract key-value pairs from.
+@param {object} schema - The schema containing a properties object with keys to search for.
+@returns {object} keyValuePairs - An object containing the extracted key-value pairs.
+*/
+
+// example of a content
+/**
+ * VAR: HelloWorld
+ */
 function extractKeyValuePairs(content, schema) {
   const keyValuePairs = {};
 
@@ -31,6 +48,14 @@ function extractKeyValuePairs(content, schema) {
   return keyValuePairs;
 }
 
+/**
+
+Validates data against a given schema using Ajv.
+@param {object} data - The data object to validate.
+@param {object} schema - The schema to validate the data against.
+@returns {object} data - The data object, if it is valid according to the schema.
+@throws {Error} If the data object does not pass the schema validation.
+*/
 function validateSchema(data, schema) {
   const ajv = new Ajv();
   const validate = ajv.compile(schema);
@@ -47,28 +72,42 @@ function validateSchema(data, schema) {
   return data;
 }
 
-async function findDirs(dir, searchTerm = LIT_CONFIG.projectName, depth = 4) {
-  const files = fs.readdirSync(dir);
-  let paths = [];
+// /**
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const filePath = path.join(dir, file);
-    const stat = fs.lstatSync(filePath);
+// Recursively finds directories matching a given search term, starting from a specified directory.
+// @param {string} dir - The directory to start searching from.
+// @param {string} [searchTerm=LIT_CONFIG.projectName] - The directory name to search for.
+// @param {number} [depth=4] - The maximum depth to search.
+// @returns {Promise<string[]>} paths - An array of found directories matching the search term.
+// */
+// export async function findDirs(dir, searchTerm = LIT_CONFIG.projectName, depth = 4) {
+//   const files = fs.readdirSync(dir);
+//   let paths = [];
 
-    if (stat.isDirectory()) {
-      if (file === searchTerm) {
-        paths.push(filePath);
-      } else if (depth > 0) {
-        const subPaths = await findDirs(filePath, searchTerm, depth - 1);
-        paths = paths.concat(subPaths);
-      }
-    }
-  }
+//   for (let i = 0; i < files.length; i++) {
+//     const file = files[i];
+//     const filePath = path.join(dir, file);
+//     const stat = fs.lstatSync(filePath);
 
-  return paths;
-}
+//     if (stat.isDirectory()) {
+//       if (file === searchTerm) {
+//         paths.push(filePath);
+//       } else if (depth > 0) {
+//         const subPaths = await findDirs(filePath, searchTerm, depth - 1);
+//         paths = paths.concat(subPaths);
+//       }
+//     }
+//   }
 
+//   return paths;
+// }
+
+/**
+
+Bundles Lit Action projects using esbuild, generating output files with metadata comments.
+@param {string} path - The base directory of the project to bundle.
+@param {object[]} fileMetadataList - An array of file metadata objects.
+*/
 const esBuildLitActionProject = async (path, fileMetadataList) => {
   // Access the properties from the LIT_CONFIG object and check if they are missing
   const DEFAULT_NAME = LIT_CONFIG.buildConfig.defaultSrcFileName;
@@ -95,8 +134,9 @@ const esBuildLitActionProject = async (path, fileMetadataList) => {
   greenLog(`\n 📦 Bundling the lit actions... \n`);
 
   let counter = 0;
+  let hasFilesThatExceededDefaultLimit = false;
 
-  fileMetadataList.forEach(async (fileMetadata, i) => {
+  fileMetadataList.asyncForEach(async (fileMetadata, i) => {
     const { file, metadata } = fileMetadata;
     const { VAR } = metadata;
 
@@ -109,6 +149,8 @@ const esBuildLitActionProject = async (path, fileMetadataList) => {
         bundle: true,
         // outfile: OUT_FILE,
         outdir: FULL_OUT_DIR,
+        // node
+        // platform: 'node',
       });
       counter++;
 
@@ -118,20 +160,47 @@ const esBuildLitActionProject = async (path, fileMetadataList) => {
         OUT_FILE_EXT
       )}`;
       greenLog(`  - ${_file}`);
-      greenLog(`    => Output: ${outfile}\n`);
+      greenLog(`    => Output: ${outfile}`);
 
       // extract everything between /** and */ and add it to the top of the file
       const metadataComment = `/**\n *\n${Object.keys(metadata)
         .map((key) => ` * ${key}: ${metadata[key]}\n *`)
         .join('\n')}\n */\n`;
-
-      console.log(metadataComment);
-
+      // read the content of the outfile and get the size of it
       const outfileContent = await fs.promises.readFile(outfile, 'utf8');
+
+      // get the filesize of the outfile content
+      const outfileSize = Buffer.byteLength(outfileContent, 'utf8');
+
+      const readableBytes = humanizeBytes(outfileSize);
+
+      // show the percentage of the size limit that the outfile is
+      const percentage = (outfileSize / LIT_CONFIG.sizeLimitBytes) * 100;
+
+      const readableLimit = humanizeBytes(LIT_CONFIG.sizeLimitBytes);
+
+      // make percentage as a string and cut to 2 decimal places
+      const percentageString = percentage.toString().slice(0, 5) + '%';
+
+      const reportMsg = `    => File Size: ${readableBytes} | Space Used: ${percentageString} (out of ${readableLimit} default limit)\n`;
+
+      if (outfileSize <= LIT_CONFIG.sizeLimitBytes) {
+        greenLog(reportMsg);
+      } else {
+        redLog(reportMsg);
+        hasFilesThatExceededDefaultLimit = true;
+      }
+
       const newContent = `${metadataComment}\n${outfileContent}`;
       await fs.promises.writeFile(outfile, newContent, 'utf8');
       if (counter === fileMetadataList.length) {
+        if (hasFilesThatExceededDefaultLimit) {
+          yellowLog(
+            `(Warning) Some files exceeded the default size limit of ${readableLimit}. Consider using the Rate Limit NFT to increase the limit.\n`
+          );
+        }
         greenLog(`\n🎉 Build successful!\n`);
+
         process.exit();
       }
     } catch (e) {

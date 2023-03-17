@@ -1,7 +1,9 @@
 import {
   createDirs,
+  findDirs,
   greenLog,
   listDirsRecursive,
+  redLog,
   thisSdkDir,
 } from '../utils.mjs';
 import inquirer from 'inquirer';
@@ -47,6 +49,19 @@ const getTemplatePath = (templateName) => {
 };
 
 export const initFunc = async ({ args }) => {
+  const userWorkingDir = process.cwd();
+
+  const litProjectPaths = await findDirs(userWorkingDir);
+
+  if (litProjectPaths.length >= 1) {
+    // if (!supportedOpts.includes(args[0])) {
+    redLog(
+      `\n❌ Project has already been initialised in this directory => ${litProjectPaths[0]}\n`
+    );
+    // redLog(`Use the --force flag to overwrite the existing project\n`);
+    process.exit();
+  }
+
   const PROMPT_DIR = args[0];
 
   // const templatePath = askWhichTemplate();

@@ -7,9 +7,14 @@
     "inFileExt": ".ts",
     "outFileExt": ".js",
     "srcDir": "src",
-    "outDir": "out"
+    "outDir": "out",
+    "testDir": "test"
   },
   "schemaPaths": {
     "litActionSchema": "$schemas/lit-action-schema.json"
-  }
+  },
+  "tempServerPort": 1209,
+  "sizeLimitBytes": 1048576,
+  "defaultSrcTemplate": "templates/template.action.ts",
+  "defaultTestTemplate": "templates/template.t.action.mjs"
 }

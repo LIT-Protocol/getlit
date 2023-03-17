@@ -1,7 +1,7 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
@@ -11,10 +11,18 @@
     "build": ""
   },
   "dependencies": {
+    "@lit-protocol/lit-node-client-nodejs": "^2.1.84",
     "ajv": "^8.12.0",
     "esbuild": "^0.17.11",
+    "express": "^4.18.2",
     "fs-extra": "^11.1.0",
     "inquirer": "^9.1.4",
+    "nodemon": "^2.0.21",
     "open": "^8.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "@types/webpack-bundle-analyzer": "^4.6.0",
+    "typescript": "^5.0.2"
   }
 }
