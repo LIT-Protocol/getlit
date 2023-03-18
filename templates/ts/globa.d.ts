@@ -16,7 +16,7 @@ declare global {
     isPermittedAction(params: {
       tokenId: string;
       ipfsId: string;
-    }): boolean;
+    }): Promise<boolean>;
 
     /**
      * Check if a given wallet address is permitted to sign using a given PKP tokenId
@@ -27,7 +27,7 @@ declare global {
     isPermittedAddress(params: {
       tokenId: string;
       address: string;
-    }): boolean;
+    }): Promise<boolean>;
 
     /**
      * Check if a given auth method is permitted to sign using a given PKP tokenId
@@ -40,14 +40,14 @@ declare global {
       tokenId: string;
       authMethodType: number;
       userId: Uint8Array;
-    }): boolean;
+    }): Promise<boolean>;
 
     /**
      * Get the full list of actions that are permitted to sign using a given PKP tokenId
      * @param params.tokenId - The tokenId to check
      * @returns An array of IPFS IDs of lit actions that are permitted to sign using the PKP tokenId
      */
-    getPermittedActions(params: { tokenId: string }): string[];
+    getPermittedActions(params: { tokenId: string }): Promise<string[]>;
 
     /**
      * Get the full list of addresses that are permitted to sign using a given PKP tokenId
@@ -65,7 +65,7 @@ declare global {
      */
     getPermittedAuthMethods(params: {
       tokenId: string;
-    }): object[];
+    }): Promise<object[]>;
 
     /**
      * Get the permitted auth method scopes for a given PKP tokenId and auth method type + id
@@ -80,14 +80,14 @@ declare global {
       authMethodType: string;
       userId: Uint8Array;
       maxScopeId: number;
-    }): boolean[];
+    }): Promise<boolean>[];
 
     /**
      * Converts a PKP public key to a PKP token ID by hashing it with keccak256
      * @param params.publicKey - The public key to convert
      * @returns The token ID as a string
      */
-    pubkeyToTokenId(params: { publicKey: string }): string;
+    pubkeyToTokenId(params: { publicKey: string }): Promise<string>;
 
     /**
      * Gets latest nonce for the given address on a supported chain
@@ -98,7 +98,7 @@ declare global {
     getLatestNonce(params: {
       address: string;
       chain: string;
-    }): string;
+    }): Promise<string>;
 
     /**
      * Ask the Lit Node to sign any data using the ECDSA Algorithm with it's private key share.  The resulting signature share will be returned to the Lit JS SDK which will automatically combine the shares and give you the full signature to use.
@@ -111,7 +111,7 @@ declare global {
       toSign: Uint8Array;
       publicKey: string;
       sigName: string;
-    }): string;
+    }): Promise<string>;
 
     /**
      * Ask the Lit Node to sign a message using the eth_personalSign algorithm.  The resulting signature share will be returned to the Lit JS SDK which will automatically combine the shares and give you the full signature to use.
@@ -124,7 +124,7 @@ declare global {
       message: string;
       publicKey: string;
       sigName: string;
-    }): string;
+    }): Promise<string>;
 
     /**
      * Checks a condition using the Lit condition checking engine.  This is the same engine that powers our Access Control product.  You can use this to check any condition that you can express in our condition language.  This is a powerful tool that allows you to build complex conditions that can be checked in a decentralized way.  Visit https://developer.litprotocol.com and click on the "Access Control" section to learn more.
@@ -137,7 +137,7 @@ declare global {
       conditions: object[];
       authSig: any;
       chain: string;
-    }): boolean;
+    }): Promise<boolean>;
 
     /**
      * Set the response returned to the client
@@ -151,7 +151,7 @@ declare global {
      * @param params.params - The parameters to pass to the child Lit Action
      * @returns The response from the child Lit Action.  Note that any signatures performed by the child Lit Action will be automatically combined and returned with the parent Lit Action to the Lit JS SDK client.
      */
-    call(params: { ipfsId: string; params: any }): string;
+    call(params: { ipfsId: string; params: any }): Promise<string>;
 
     /**
      * Convert a Uint8Array to a string.  This is a re-export of this function: https://www.npmjs.com/package/uint8arrays#tostringarray-encoding--utf8
