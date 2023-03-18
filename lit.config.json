@@ -1,4 +1,5 @@
 {
+  "releaseStage":"Beta",
   "projectName": "lit_actions",
   "templatesRoot": "templates",
   "selectedTemplate": "ts",

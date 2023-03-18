@@ -1,4 +1,5 @@
 import { getPackageVersion, greenLog } from '../utils.mjs';
+import gradient from 'gradient-string';
 
 /**
  * Prints out the help menu
@@ -26,19 +27,24 @@ export function helpFunc({ commandMaps }) {
 
     return maxLength;
   }
+  console.log(gradient('#FDA778', '#620F6A')(`
+   ____      _   _     _ _   
+   / ___| ___| |_| |   (_) |_ 
+  | |  _ / _ \\ __| |   | | __|
+  | |_| |  __/ |_| |___| | |_ 
+   \\____|\\___|\\__|_____|_|\\__|
+
+🔥 GetLit CLI [v${getPackageVersion()} ${LIT_CONFIG.releaseStage}] - Powered by Lit Protocol 🔥
+`));
 
   // print the commands and align the descriptions based on the longest command
   const longestCommand = getLongestUsageLength(commands);
 
-  greenLog(
-    `
-🔥 GetLit CLI [v${getPackageVersion()}] - Powered by Lit Protocol 🔥
-
+  greenLog(`
 Usage: getlit [commands] | [] are optional, <> are required
 
 Commands:
-`
-  );
+`);
 
   const ignoreRepeat = ['default'];
   const helpCommands = [];

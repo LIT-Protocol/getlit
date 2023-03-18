@@ -26,7 +26,7 @@ const commandMaps = [
   {
     name: 'build',
     aliases: [],
-    usage: 'getlit build [--watch]',
+    usage: 'getlit build',
     description: '🏗  Build your Lit Actions',
     fn: buildFunc,
   },
@@ -40,8 +40,8 @@ const commandMaps = [
   {
     name: 'test',
     aliases: [],
-    usage: 'getlit test <lit-action-name>',
-    description: '🧪 Run your Lit Actions tests',
+    usage: 'getlit test [<lit-action-name>]',
+    description: '🧪 Test a Lit Action',
     fn: testFunc,
   },
   {
