@@ -16,7 +16,7 @@ try {
     authSig,
     jsParams: {
       publicKey: pkpPublicKey,
-      sigName: 'main-action-sig',
+      sigName: 'example-sig',
     },
   });
   console.log(res);

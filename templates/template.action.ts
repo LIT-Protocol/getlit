@@ -8,4 +8,10 @@
     publicKey, // <-- You should pass this in jsParam
     sigName,
   });
+
+  LitActions.setResponse({
+    response: JSON.stringify({
+      foo: 'bar',
+    }),
+  });
 })();
