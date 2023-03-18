@@ -112,37 +112,57 @@ export const humanizeBytes = (bytes) => {
   return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
 };
 
-// read the file and return as json
+/**
+ * It reads from the root of the user working directory, NOT the current SDK.
+ * @returns { object } JSON object.
+ */
 export async function readJsonFile(filename) {
   const filePath = path.join(process.cwd(), filename);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
 }
 
+/**
+ * It reads from the root of the current SDK, NOT the user working directory.
+ * @returns { object } JSON object.
+ */
 export function readProjectJsonFile(filename) {
   const filePath = thisSdkDir() + filename;
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
 }
 
+/**
+ * It reads from the root of the current SDK, NOT the user working directory.
+ */
 export function readSdkFile(filename) {
   const filePath = thisSdkDir() + filename;
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return fileContents;
 }
 
+/**
+ * It read from the root of the user working directory, NOT the current SDK.
+ */
 export async function readFile(filename) {
   const filePath = path.join(process.cwd(), filename);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return fileContents;
 }
 
-// create a function to write to file
+/**
+ * It writes to the root of the user working directory, NOT the current SDK.
+ * @param { object } content Taking content as a JSON object.
+ */
 export async function writeJsonFile(filename, content) {
   const filePath = path.join(process.cwd(), filename);
   fs.writeFileSync(filePath, JSON.stringify(content, null, 2));
 }
 
+/**
+ * It writes to the root of the user working directory, NOT the current SDK.
+ * @param { string } content Taking content as a string.
+ */
 export async function writeFile(filename, content) {
   const filePath = path.join(process.cwd(), filename);
   fs.writeFileSync(filePath, content);

@@ -9,6 +9,7 @@ import { buildFunc } from './scripts/build.mjs';
 import { setupFunc } from './scripts/setup.mjs';
 import { newFunc } from './scripts/newFunc.mjs';
 import { testFunc } from './scripts/testFunc.mjs';
+import { devFunc } from './scripts/devFunc.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -43,6 +44,13 @@ const commandMaps = [
     usage: 'getlit test [<lit-action-name>]',
     description: '🧪 Test a Lit Action',
     fn: testFunc,
+  },
+  {
+    name: 'dev',
+    aliases: [],
+    usage: 'getlit dev [<lit-action-name>]',
+    description: '🧪 Simultaneously build and test a Lit Action',
+    fn: devFunc,
   },
   {
     name: 'setup',
