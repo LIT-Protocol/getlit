@@ -187,7 +187,7 @@ async function pullFunc() {
     )
   );
 
-  await fs.promises.writeFile('templates/ts/global.d.ts', declareGlobalContent);
+  await fs.promises.writeFile('templates/ts/globa.d.ts', declareGlobalContent);
 
   process.exit();
 }
