@@ -5,7 +5,8 @@ import {
   redLog,
   selectTest,
 } from '../utils.mjs';
-
+import fs from 'fs';
+import { promises } from 'fs';
 const getActionName = async (args) => {
   // -- validate
   let selectedAction;
@@ -21,11 +22,17 @@ const getActionName = async (args) => {
 };
 
 export const devFunc = async ({ args }) => {
-  // -- var
+  // -- get var and validate
+  const proj = await getLitProjectMetaData();
+
+  const files = await fs.promises.readdir(proj.out);
+  if (!files || files.length <= 0) {
+    redLog(`\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`);
+    process.exit();
+  }
+
   const selectedAction = await getActionName(args);
   await getConfigFile();
-
-  const proj = await getLitProjectMetaData();
 
   // nodemon --watch /Users/user/Projects/test/test-cli/lit_actions/src/ --ext ts --exec "getlit build pear && getlit test pear"
   const cmd = `nodemon --watch ${proj.src} --ext ts --exec "getlit build ${selectedAction} && getlit test ${selectedAction}"`;
