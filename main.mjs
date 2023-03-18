@@ -46,10 +46,10 @@ const commandMaps = [
     fn: testFunc,
   },
   {
-    name: 'dev',
-    aliases: [],
-    usage: 'getlit dev [<lit-action-name>]',
-    description: '🧪 Simultaneously build and test a Lit Action',
+    name: 'watch',
+    aliases: ['watch'],
+    usage: 'getlit watch [<lit-action-name>]',
+    description: '🔧 Simultaneously build and test a Lit Action',
     fn: devFunc,
   },
   {
