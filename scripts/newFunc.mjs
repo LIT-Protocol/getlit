@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import {
+  findDirs,
   getLitProjectMetaData,
   greenLog,
   readSdkFile,
@@ -57,12 +58,20 @@ export async function newFunc({ args }) {
     actionName = name;
   }
 
-  // get the content from the templates/template.action.ts folder
+  /**
+   * Loads the default action template, extracts its extension, and constructs
+   * the action source file name. Logs an error message and exits the process
+   * if the default action template is not found.
+   */
   let tempContent;
   let srcFileName;
 
   try {
     tempContent = readSdkFile(LIT_CONFIG.defaultSrcTemplate);
+
+    // replace the string 'placeholder' with the action name
+    tempContent = tempContent.replace('placeholder', actionName);
+
     const ext = exts(LIT_CONFIG.defaultSrcTemplate);
     srcFileName = `${srcFolder}${actionName}${ext}`;
   } catch (e) {
@@ -72,14 +81,18 @@ export async function newFunc({ args }) {
     process.exit();
   }
 
-  // get the content from the templates/template.test.ts folder
+  /**
+   * Loads the default test template, extracts its extension, and constructs
+   * the test source file name. Logs an error message and exits the process
+   * if the default test template is not found.
+   */
   let tempTest;
   let testFileName;
 
   try {
     tempTest = readSdkFile(LIT_CONFIG.defaultTestTemplate);
     const ext = exts(LIT_CONFIG.defaultTestTemplate);
-    testFileName = `${testFolder}${actionName}${ext}`;
+    testFileName = `${testFolder}${actionName}.t${ext}`;
   } catch (e) {
     redLog(
       `\n❌ Could not find the default test template at ${LIT_CONFIG.defaultTestTemplate}\n`
@@ -87,6 +100,13 @@ export async function newFunc({ args }) {
     process.exit();
   }
 
+  /**
+   * createFiles - Creates action and test files if they don't exist.
+   * If the action file exists, logs an error message.
+   * If the test file exists, logs an error message.
+   * On successful creation of action file, logs a success message.
+   * On successful creation of test file, logs a success message.
+   */
   async function createFiles() {
     if (fs.existsSync(srcFileName)) {
       redLog(`  ❌ Action already exists at ${srcFileName}\n`);

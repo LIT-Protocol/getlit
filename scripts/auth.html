@@ -27,17 +27,40 @@
       font-weight: 500;
     }
 
+    a {
+      font-weight: bold;
+      color: white;
+    }
+
     p {
-      font-size: 21px;
+      font-size: 13px;
       color: #9ba1a6;
-      max-width: 480px;
-      text-align: center;
-      margin-bottom: 15px;
+      /* max-width: 480px; */
+      /* text-align: center; */
+      /* margin-bottom: 15px; */
     }
 
     #authSig,
     #selectedPKP {
       color: red;
+    }
+
+    li:hover {
+      background: #FDA778;
+      color: black;
+      cursor: pointer;
+    }
+
+    /* make button pretty */
+    button {
+      background: #FDA778;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -57,11 +80,29 @@
 
   <h3>Select your PKPs</h3>
   <div id="pkps">Loading PKPs...</div>
+  <div id="info"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/lit-node-client-vanilla/lit-node-client.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/contracts-sdk-vanilla/contracts-sdk.js"></script>
 
   <script>
+
+    async function sendAuthSigToServer(authSig, pkpPublicKey) {
+      const response = await fetch('http://localhost:1209/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          authSig,
+          pkpPublicKey,
+        }),
+      });
+
+      const data = await response.json();
+      return data;
+    }
+
 
     (async () => {
       // console.log(LitJsSdk_litNodeClient);
@@ -89,14 +130,82 @@
           authSig.address
         );
 
+      const pkpElem = document.getElementById('pkps');
+      const infoElem = document.getElementById('info');
+
+      if (!tokenIds || tokenIds.length <= 0) {
+        const msg = `No PKPs found for this address: ${authSig.address}`;
+        console.error(msg);
+
+        pkpElem.innerHTML = msg;
+
+      }
+
+      // append a message that they can get faucet from this url
+      // https://mumbaifaucet.com/
+      const faucetMsg = document.createElement('p');
+      faucetMsg.innerHTML = "You can get some FREE MATIC from the <a href='https://mumbaifaucet.com/' target='_blank'>Mumbai Faucet</a>."
+      infoElem.appendChild(faucetMsg);
+
+
+      // append a button to the above element
+      const button = document.createElement('button');
+      button.innerHTML = "Mint PKP!";
+      button.addEventListener('click', async () => {
+        // refresh the page
+        // window.location.reload();
+
+        // mint a pkp
+        const mintCost = await litContracts.pkpNftContract.read.mintCost();
+
+        console.log("mintCost:", mintCost);
+
+        let tx;
+
+        button.innerHTML = "Minting...";
+        try {
+          tx = await litContracts.pkpNftContract.write.mintNext(2, { value: mintCost });
+        } catch (e) {
+          alert(e?.data?.message ?? e);
+          button.innerHTML = "Mint PKP!";
+        }
+
+        let tokenId;
+
+
+        try {
+          tokenId = (await tx.wait()).events[1].topics[3];
+          console.log("tokenId:", tokenId);
+          try {
+            const pubKey = await litContracts.pkpNftContract.read.getPubkey(tokenId);
+            console.log("pubKey:", pubKey);
+
+            const data = await sendAuthSigToServer(authSig, pubKey)
+            console.log("data:", data);
+          } catch (e) {
+            window.location.reload();
+          }
+
+        } catch (e) {
+          // refresh the page
+          window.location.reload();
+        }
+
+        // refresh the page
+
+      });
+
+      // append a new line before the button
+      infoElem.appendChild(document.createElement('br'));
+      infoElem.appendChild(button);
+
       const pubKeys = await Promise.all(
         tokenIds.map((tokenId) =>
           litContracts.pkpNftContract.read.getPubkey(tokenId)
         )
       );
 
-      const pkps = document.getElementById('pkps');
-      pkps.innerHTML = pubKeys.map((pkp) => `<li>${pkp}</li>`).join('');
+      pkpElem.innerHTML = pubKeys.map((pkp) => `<li>${pkp}</li>`).join('');
 
       // make each pkp selectable and set the selected pkp to the selectedPKP span
       const pkpList = document.querySelectorAll('#pkps li');
@@ -107,26 +216,11 @@
           pkp.classList.add('selected');
           selectedPKP.innerHTML = pkp.innerHTML;
 
-          // send this authSig to the server
-          const response = await fetch('http://localhost:1209/api', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              authSig,
-              pkpPublicKey: pkp.innerHTML,
-            }),
-          });
-
-          const data = await response.json();
-
+          const data = await sendAuthSigToServer(authSig, pkp.innerHTML)
           console.log("data:", data);
 
           alert("You can close this window now");
           window.close();
-
-
         });
       });
 

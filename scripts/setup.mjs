@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bodyParser from 'body-parser';
-import { getLitProjectMetaData, greenLog } from '../utils.mjs';
+import { getLitProjectMetaData, greenLog, redLog } from '../utils.mjs';
 import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,8 +23,6 @@ export const setupFunc = async () => {
   await open(`http://localhost:${port}/auth`);
 
   app.post('/api', async (req, res) => {
-    console.log('xbody:', req.body);
-
     const authSig = req.body.authSig;
     const pkpPublicKey = req.body.pkpPublicKey;
 
@@ -43,16 +41,24 @@ export const setupFunc = async () => {
     configFileJson.pkpPublicKey = pkpPublicKey;
 
     // write to config file
-    await fs.promises.writeFile(
-      configFile,
-      JSON.stringify(configFileJson, null, 2)
-    );
+    try {
+      await fs.promises.writeFile(
+        configFile,
+        JSON.stringify(configFileJson, null, 2)
+      );
+
+      greenLog(`
+🎉 Success! Your authSig and pkpPublicKey have been saved to your config file.
+   You can view your config file at ${configFile}
+      `);
+    } catch (e) {
+      redLog('Error writing to config file:', e);
+    }
 
     res.json({ message: 'Hello from the API!' });
 
     // close server
     process.exit();
-    
   });
 
   app.get('/auth', (req, res) => {
