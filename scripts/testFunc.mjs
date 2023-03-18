@@ -7,6 +7,10 @@ import {
 } from '../utils.mjs';
 import fs from 'fs';
 
+function removeExtension(filename) {
+  return filename.replace(/\.action\.[^/.]+$/, '');
+}
+
 export const getConfigFile = async () => {
   const proj = await getLitProjectMetaData();
 
@@ -32,25 +36,26 @@ export const getConfigFile = async () => {
 export async function testFunc({ args }) {
   // -- validate
   const userConfig = await getConfigFile();
+  const proj = await getLitProjectMetaData();
 
   let actionName = args[0];
 
   if (!actionName) {
-    greenLog('');
-    // ask user what they want to name the action
-    let { name } = await inquirer.prompt([
+    const files = (await fs.promises.readdir(proj.out)).map((file) =>
+      removeExtension(file)
+    );
+
+    const { name } = await inquirer.prompt([
       {
-        type: 'input',
+        type: 'list',
         name: 'name',
-        message: 'What is the name of your lit action?',
-        default: 'main',
+        message: 'Which action do you want to test?',
+        choices: files,
       },
     ]);
-    greenLog('');
+
     actionName = name;
   }
-
-  const proj = await getLitProjectMetaData();
 
   const testFile = proj.test + actionName + '.t.action.mjs';
 
