@@ -1,6 +1,6 @@
 # GetLit CLI
 
-The GetLit CLI is a command-line tool designed to help developers manage their Lit projects. The CLI provides a set of commands to create, build, test, and configure Lit Actions.
+The GetLit CLI is a command-line tool designed to help developers manage their Lit Actions projects. The CLI provides a set of commands to create, build, test, and configure Lit Actions.
 
 ## Getting Started
 

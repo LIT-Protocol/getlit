@@ -1,14 +1,14 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
     "start": "node main.mjs",
     "dev": "nodemon main.mjs",
-    "build": ""
+    "bump": "node tools.mjs bump --patch"
   },
   "dependencies": {
     "@lit-protocol/lit-node-client-nodejs": "^2.1.90",
