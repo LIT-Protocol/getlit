@@ -1,5 +1,10 @@
 /**
- * VAR: 
+ * NA_E: foo
+ *
+ * ⬆️ Replace "_" with "M" to pass the schema validation
+ *
  */
 
-export const foo = () => 'bar';
+const foo = () => {
+  return "bar";
+};

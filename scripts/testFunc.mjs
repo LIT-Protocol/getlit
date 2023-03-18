@@ -1,16 +1,42 @@
 import inquirer from 'inquirer';
 import {
+  childRunCommand,
   getLitProjectMetaData,
-  LitJsSdk,
-  spawnProcess,
-  thisSdkDir,
+  greenLog,
+  redLog,
 } from '../utils.mjs';
 import fs from 'fs';
 
+export const getConfigFile = async () => {
+  const proj = await getLitProjectMetaData();
+
+  const configFile = proj.dir + '/' + LIT_CONFIG.configFile;
+
+  const configFileJson = JSON.parse(
+    await fs.promises.readFile(configFile, 'utf8')
+  );
+
+  if (!configFileJson.authSig || !configFileJson.pkpPublicKey) {
+    redLog(
+      `\n⛔️ Configuration file appears to be incorrect. Please check your config located at:
+  ${proj.dir}/${LIT_CONFIG.configFile}\n
+  Alternatively, you can run "getlit setup" to fix the issue.
+      `
+    );
+    process.exit();
+  }
+
+  return configFileJson;
+};
+
 export async function testFunc({ args }) {
+  // -- validate
+  const userConfig = await getConfigFile();
+
   let actionName = args[0];
 
   if (!actionName) {
+    greenLog('');
     // ask user what they want to name the action
     let { name } = await inquirer.prompt([
       {
@@ -20,6 +46,7 @@ export async function testFunc({ args }) {
         default: 'main',
       },
     ]);
+    greenLog('');
     actionName = name;
   }
 
@@ -27,31 +54,15 @@ export async function testFunc({ args }) {
 
   const testFile = proj.test + actionName + '.t.action.mjs';
 
-  // console.log(testFile);
+  // check if test file exists
+  if (!fs.existsSync(testFile)) {
+    redLog(`\n❌ Test file does not exist at ${testFile}\n`);
+    process.exit();
+  }
 
+  greenLog(`\n🧪 Testing => ${testFile}\n`);
 
+  await childRunCommand(`node ${testFile}`);
 
-  // console.log(`${thisSdkDir()}node_modules/@lit-protocol/lit-node-client-nodejs`);
-
-  // spawnProcess(`node ${testFile}`);
-
-  // get the content of the
-  const content = fs.readFileSync(
-    proj.out + '/' + actionName + '.action.js',
-    'utf8'
-  );
-
-  const client = new LitJsSdk.LitNodeClientNodeJs({
-    litNetwork: 'serrano',
-  });
-
-  await client.connect();
-
-  const res = await client.executeJs({
-    authSig,
-    code: content,
-    jsParams: {},
-  });
-
-  console.log('res:', res);
+  process.exit();
 }

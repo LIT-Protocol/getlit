@@ -3,7 +3,7 @@
   "templatesRoot": "templates",
   "selectedTemplate": "ts",
   "buildConfig": {
-    "defaultSrcFileName": "index.action",
+    "defaultSrcFileName": "main.action",
     "inFileExt": ".ts",
     "outFileExt": ".js",
     "srcDir": "src",
@@ -16,5 +16,6 @@
   "tempServerPort": 1209,
   "sizeLimitBytes": 1048576,
   "defaultSrcTemplate": "templates/template.action.ts",
-  "defaultTestTemplate": "templates/template.t.action.mjs"
+  "defaultTestTemplate": "templates/template.t.action.mjs",
+  "configFile": "getlit.json"
 }

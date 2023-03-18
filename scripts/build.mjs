@@ -223,6 +223,13 @@ export async function buildFunc() {
 
   const litProjectPaths = await findDirs(userWorkingDir);
 
+  if (litProjectPaths.length <= 0) {
+    redLog(
+      `\n❌ Looks like you haven't created a project yet. Please run \`getlit here\` to create a project first.\n`
+    );
+    process.exit();
+  }
+
   if (litProjectPaths.length > 1) {
     redLog(
       `There are multiple directories with the name ${LIT_CONFIG.projectName} in the current directory. Please remove the extra directories and try again.`

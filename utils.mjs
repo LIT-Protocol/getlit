@@ -4,11 +4,8 @@ import { exec, spawn } from 'child_process';
 import { exit } from 'process';
 import readline from 'readline';
 import { join } from 'path';
-import * as LitJsSdk from '@lit-protocol/lit-node-client-nodejs';
 
 const rl = readline.createInterface(process.stdin, process.stdout);
-
-export { LitJsSdk };
 
 try {
   Array.prototype.asyncForEach = async function (callback) {
@@ -244,7 +241,7 @@ export const spawnProcess = (
 ) => {
   let _commands = commands.split(' ');
 
-  let eventName = commands.split(' ')[1].replace('.mjs', '');
+  // let eventName = commands.split(' ')[1].replace('.mjs', '');
 
   // make commands to pass to spawn
   const command = _commands[0];
@@ -257,6 +254,11 @@ export const spawnProcess = (
       ...process.env,
       FORCE_COLOR: true,
     },
+  });
+
+  bob.on('error', (error) => {
+    console.error(`Error occurred in the child process: ${error.message}`);
+    // handle the error here
   });
 
   bob.on('exit', (exitCode) => {
@@ -281,9 +283,9 @@ export const spawnProcess = (
   // bob.stdout.pipe(process.stdout);
   // randomize the color
 
-  if (!opt.color) {
-    opt.color = Math.floor(Math.random() * 6) + 31;
-  }
+  // if (!opt.color) {
+  //   opt.color = Math.floor(Math.random() * 6) + 31;
+  // }
 
   bob.stdout.on('data', (data) => {
     if (!opt.prefix) {

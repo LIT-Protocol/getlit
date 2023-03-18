@@ -6,10 +6,9 @@ import { docsFunc } from './scripts/docs.mjs';
 import { helpFunc } from './scripts/help.mjs';
 import { initFunc } from './scripts/init.mjs';
 import { buildFunc } from './scripts/build.mjs';
-import { authSigFunc } from './scripts/authsig.mjs';
+import { setupFunc } from './scripts/setup.mjs';
 import { newFunc } from './scripts/newFunc.mjs';
 import { testFunc } from './scripts/testFunc.mjs';
-import * as LitJsSdk from '@lit-protocol/lit-node-client-nodejs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -49,8 +48,8 @@ const commandMaps = [
     name: 'setup',
     aliases: [],
     usage: 'getlit setup',
-    description: '🔑 Get your authsig and select your PKP token id',
-    fn: authSigFunc,
+    description: '🔑 Setup config for authSig and PKP',
+    fn: setupFunc,
   },
   {
     name: 'docs',
@@ -102,5 +101,3 @@ const setup = () => {
 };
 
 setup();
-
-export { LitJsSdk };

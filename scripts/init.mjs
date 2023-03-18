@@ -100,7 +100,7 @@ export const initFunc = async ({ args }) => {
 
   const installLocation = `${process.cwd()}/${_srcDir}${projectName}`;
 
-  greenLog(`🎉 The project has been installed at ${installLocation}`);
+  greenLog(`\n🎉 The project has been installed at ${installLocation}\n`);
 
   // copy the template to the current directory
   try {

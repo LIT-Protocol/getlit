@@ -7,5 +7,5 @@
     "AUTHOR": { "type": "string" },
     "VERSION": { "type": "string" }
   },
-  "required": ["VAR"]
+  "required": ["NAME"]
 }
