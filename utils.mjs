@@ -4,6 +4,7 @@ import { exec, spawn } from 'child_process';
 import { exit } from 'process';
 import readline from 'readline';
 import { join } from 'path';
+import inquirer from 'inquirer';
 
 const rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -639,4 +640,51 @@ export const thisSdkDir = () => {
   const __dirname = new URL('.', import.meta.url).pathname;
 
   return __dirname;
+};
+
+export const selectTest = async (args) => {
+  const proj = await getLitProjectMetaData();
+
+  let actionName = args[0];
+
+  if (!actionName) {
+    const files = (await fs.promises.readdir(proj.out)).map((file) =>
+      file.replace(/\.action\.[^/.]+$/, '')
+    );
+
+    const { name } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'name',
+        message: 'Which action do you want to test?',
+        choices: files,
+      },
+    ]);
+
+    actionName = name;
+  }
+
+  return actionName;
+};
+
+export const getConfigFile = async () => {
+  const proj = await getLitProjectMetaData();
+
+  const configFile = proj.dir + '/' + LIT_CONFIG.configFile;
+
+  const configFileJson = JSON.parse(
+    await fs.promises.readFile(configFile, 'utf8')
+  );
+
+  if (!configFileJson.authSig || !configFileJson.pkpPublicKey) {
+    redLog(
+      `\n⛔️ Configuration file appears to be incorrect. Please check your config located at:
+  ${proj.dir}/${LIT_CONFIG.configFile}\n
+  Alternatively, you can run "getlit setup" to fix the issue.
+      `
+    );
+    process.exit();
+  }
+
+  return configFileJson;
 };

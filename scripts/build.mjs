@@ -4,12 +4,10 @@ import {
   redLog,
   greenLog,
   readProjectJsonFile,
-  asyncForEach,
   humanizeBytes,
   yellowLog,
   findDirs,
 } from '../utils.mjs';
-import path from 'path';
 import Ajv from 'ajv';
 
 function checkConfigProperty(property, propertyName) {
@@ -71,36 +69,6 @@ function validateSchema(data, schema) {
 
   return data;
 }
-
-// /**
-
-// Recursively finds directories matching a given search term, starting from a specified directory.
-// @param {string} dir - The directory to start searching from.
-// @param {string} [searchTerm=LIT_CONFIG.projectName] - The directory name to search for.
-// @param {number} [depth=4] - The maximum depth to search.
-// @returns {Promise<string[]>} paths - An array of found directories matching the search term.
-// */
-// export async function findDirs(dir, searchTerm = LIT_CONFIG.projectName, depth = 4) {
-//   const files = fs.readdirSync(dir);
-//   let paths = [];
-
-//   for (let i = 0; i < files.length; i++) {
-//     const file = files[i];
-//     const filePath = path.join(dir, file);
-//     const stat = fs.lstatSync(filePath);
-
-//     if (stat.isDirectory()) {
-//       if (file === searchTerm) {
-//         paths.push(filePath);
-//       } else if (depth > 0) {
-//         const subPaths = await findDirs(filePath, searchTerm, depth - 1);
-//         paths = paths.concat(subPaths);
-//       }
-//     }
-//   }
-
-//   return paths;
-// }
 
 /**
 
@@ -256,9 +224,16 @@ export async function buildFunc() {
     file.includes('.action.ts')
   );
 
-  const litActionSchema = await readProjectJsonFile(
-    LIT_CONFIG.schemaPaths.litActionSchema
-  );
+  let litActionSchema;
+
+  try {
+    litActionSchema = await readProjectJsonFile(
+      LIT_CONFIG.schemaPaths.litActionSchema
+    );
+  } catch (e) {
+    redLog(e);
+    process.exit();
+  }
 
   // console.log('litActionSchema:', litActionSchema);
 
