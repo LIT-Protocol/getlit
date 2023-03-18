@@ -18,5 +18,8 @@
   "sizeLimitBytes": 1048576,
   "defaultSrcTemplate": "templates/template.action.ts",
   "defaultTestTemplate": "templates/template.t.action.mjs",
-  "configFile": "getlit.json"
+  "configFile": "getlit.json",
+  "sources":{
+    "types": "https://actions-docs.litprotocol.com/types.d.ts"
+  }
 }

@@ -9,5 +9,5 @@
     "typeRoots": ["./src/types"], 
     "baseUrl": "./src"
   },
-  "include": ["src/**/*", "src/foo.action.ts", "global.d.ts"]
+  "include": ["global.d.ts"]
 }

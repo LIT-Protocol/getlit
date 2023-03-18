@@ -1,13 +1,15 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
     "start": "node main.mjs",
     "dev": "nodemon main.mjs",
+    "v": "node tools.mjs v",
+    "tool": "node tools.mjs",
     "bump": "node tools.mjs bump --patch"
   },
   "dependencies": {

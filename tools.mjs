@@ -1,4 +1,4 @@
-import { getArgs, greenLog, redLog } from './utils.mjs';
+import { getArgs, greenLog, redLog, readProjectJsonFile } from './utils.mjs';
 import fs from 'fs';
 
 const args = getArgs();
@@ -6,7 +6,7 @@ const args = getArgs();
 const commandMaps = [
   {
     command: 'v',
-    description: 'node tools.mjs v',
+    description: 'latest NPM version of getlit',
     fn: async () => {
       const npmVersion = await getLatestVersion();
       greenLog(`📦 Current NPM version: ${npmVersion}`);
@@ -15,8 +15,13 @@ const commandMaps = [
   },
   {
     command: 'bump',
-    description: 'node tools.mjs bump [--major|--minor|--patch]',
+    description: 'bump the version with [--major|--minor|--patch]',
     fn: bumpFunc,
+  },
+  {
+    command: 'pull',
+    description: 'pull the latest dependencies from Lit Protocol',
+    fn: pullFunc,
   },
 ];
 
@@ -35,8 +40,20 @@ const setup = () => {
 
     // show the list of commands
     console.log('Available commands:\n');
+
+    // find the longest command and make the description align
+    const longestCommand = commandMaps.reduce((a, b) =>
+      a.command.length > b.command.length ? a : b
+    );
+
+    const longestCommandLength = longestCommand.command.length;
+
     commandMaps.forEach((commandMap) => {
-      greenLog(`  - ${commandMap.command} | ${commandMap.description}`);
+      const { command, description } = commandMap;
+
+      const space = ' '.repeat(longestCommandLength - command.length);
+
+      greenLog(`  ${command}${space}  | ${description}`);
     });
 
     greenLog('');
@@ -110,5 +127,67 @@ async function bumpFunc() {
   );
 
   greenLog(`\n✅ Successfully bumped to version ${packageJson.version}\n`);
+  process.exit();
+}
+
+async function pullFunc() {
+  function removeDeclareFunction(str) {
+    const regex = /declare\s+function\s+/g;
+    return str.replace(regex, '');
+  }
+
+  function extractActionsNamespace(content) {
+    const pattern = /export namespace Actions \{([\s\S]*)\}/;
+    const match = content.match(pattern);
+    if (match && match.length > 1) {
+      return match[1];
+    }
+    return null;
+  }
+
+  function removeLastBracket(str) {
+    // Match a `}` character only if there's no non-whitespace character before or after it
+    const regex = /(?<!\S)\}(?!\S)/g;
+    return str.replace(regex, '');
+  }
+
+  function addLitActionsToTemplate(actionsContent) {
+    const template = `declare global {
+    
+    var pkpPublicKey: any;
+    var publicKey: any;
+    var sigName: any;
+    var toSign: any;
+  
+    var LitActions: {
+  ${actionsContent}
+    };
+  }
+  
+  export {};`;
+
+    return template;
+  }
+
+  const LIT_CONFIG = readProjectJsonFile('lit.config.json');
+
+  const getTypes = async () => {
+    const res = await fetch(LIT_CONFIG.sources.types);
+
+    return await res.text();
+  };
+
+  const typesContent = await getTypes();
+
+  console.log(typesContent);
+
+  const declareGlobalContent = addLitActionsToTemplate(
+    removeLastBracket(
+      extractActionsNamespace(removeDeclareFunction(typesContent))
+    )
+  );
+
+  await fs.promises.writeFile('templates/ts/global.d.ts', declareGlobalContent);
+
   process.exit();
 }
