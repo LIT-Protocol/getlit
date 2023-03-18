@@ -47,7 +47,7 @@ const commandMaps = [
   },
   {
     name: 'watch',
-    aliases: ['watch'],
+    aliases: ['dev'],
     usage: 'getlit watch [<lit-action-name>]',
     description: '🔧 Simultaneously build and test a Lit Action',
     fn: devFunc,

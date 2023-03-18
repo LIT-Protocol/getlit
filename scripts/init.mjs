@@ -2,43 +2,11 @@ import {
   createDirs,
   findDirs,
   greenLog,
-  listDirsRecursive,
   redLog,
   thisSdkDir,
 } from '../utils.mjs';
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
-
-/**
- * Asks the user which template they want to use
- * @returns {string} the path to the template
- */
-// const askWhichTemplate = async () => {
-//   const dirs = await listDirsRecursive(`${thisSdkDir()}/templates`, false);
-
-//   const dirNames = dirs.map((dir) => {
-//     return dir.split('/').pop();
-//   });
-
-//   // make the dirs selectable in the prompt using inquirer
-//   const choices = dirNames.map((dir, i) => {
-//     return {
-//       name: dir,
-//       value: dirs[i],
-//     };
-//   });
-
-//   const { templatePath } = await inquirer.prompt([
-//     {
-//       type: 'list',
-//       name: 'templatePath',
-//       message: 'Select a template',
-//       choices,
-//     },
-//   ]);
-
-//   return `${thisSdkDir()}templates/templatePath`;
-// };
 
 const fixPath = (path) => {
   return path == './' ? '' : path.endsWith('/') ? path : `${path}/`;
