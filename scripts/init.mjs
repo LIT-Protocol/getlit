@@ -45,7 +45,7 @@ export const initFunc = async ({ args }) => {
     
     Options:
     
-      <project-name>  The name of the project
+      <path> the directory to install the project in
       
         `);
 
