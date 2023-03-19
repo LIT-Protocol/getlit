@@ -21,8 +21,9 @@ const getActionName = async (args) => {
   return selectedAction;
 };
 
-export const devFunc = async ({ args }) => {
+export const watchFunc = async ({ args }) => {
   // -- get var and validate
+  await getConfigFile();
   const proj = await getLitProjectMetaData();
 
   const files = await fs.promises.readdir(proj.out);
@@ -32,7 +33,7 @@ export const devFunc = async ({ args }) => {
   }
 
   const selectedAction = await getActionName(args);
-  await getConfigFile();
+  
 
   // nodemon --watch /Users/user/Projects/test/test-cli/lit_actions/src/ --ext ts --exec "getlit build pear && getlit test pear"
   const cmd = `nodemon --watch ${proj.src} --ext ts --exec "getlit build ${selectedAction} && getlit test ${selectedAction}"`;

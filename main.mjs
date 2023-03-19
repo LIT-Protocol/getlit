@@ -9,7 +9,7 @@ import { buildFunc } from './scripts/build.mjs';
 import { setupFunc } from './scripts/setup.mjs';
 import { newFunc } from './scripts/newFunc.mjs';
 import { testFunc } from './scripts/testFunc.mjs';
-import { devFunc } from './scripts/devFunc.mjs';
+import { watchFunc } from './scripts/watchFunc.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -20,7 +20,7 @@ const commandMaps = [
   {
     name: 'init',
     aliases: ['here'],
-    usage: 'getlit here',
+    usage: 'getlit init',
     description: '🏁 Initialise a new Lit project',
     fn: initFunc,
   },
@@ -32,8 +32,8 @@ const commandMaps = [
     fn: buildFunc,
   },
   {
-    name: 'action',
-    aliases: ['new'],
+    name: 'new',
+    aliases: ['action'],
     usage: 'getlit action [<lit-action-name>]',
     description: '📝 Create a new Lit Action',
     fn: newFunc,
@@ -50,7 +50,7 @@ const commandMaps = [
     aliases: ['dev'],
     usage: 'getlit watch [<lit-action-name>]',
     description: '🔧 Simultaneously build and test a Lit Action',
-    fn: devFunc,
+    fn: watchFunc,
   },
   {
     name: 'setup',

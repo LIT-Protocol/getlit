@@ -4,6 +4,7 @@ import {
   greenLog,
   redLog,
   thisSdkDir,
+  usageLog,
 } from '../utils.mjs';
 import inquirer from 'inquirer';
 import fs from 'fs-extra';
@@ -40,14 +41,13 @@ export const initFunc = async ({ args }) => {
   if (PROMPT_DIR !== undefined) {
     _srcDir = fixPath(PROMPT_DIR);
   } else {
-    greenLog(`
-    Usage: getlit here [options]
-    
-    Options:
-    
-      <path> the directory to install the project in
-      
-        `);
+    usageLog({
+      usage: `getlit init`,
+      options: [{
+        name: `path`,
+        description: `the directory to install the project in, default ./`
+      }],
+    });
 
     // ask user which direcotry they want to install the project in, default ./
     // TODO: check if there's a 'src' directory and use that as the default

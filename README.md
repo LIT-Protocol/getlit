@@ -13,9 +13,9 @@ yarn add global getlit
 
 | Command                  | Usage                               | Description                               |
 | ------------------------ | ----------------------------------- | ----------------------------------------- |
-| `getlit here` \| `init` | `getlit init`                       | 🏁 Initialise a new Lit project           |
+| `getlit init` \| `here` | `getlit init`                       | 🏁 Initialise a new Lit project           |
 | `getlit build`           | `getlit build`                      | 🏗  Build your Lit Actions                |
-| `getlit action` \| `new` | `getlit action [<lit-action-name>]` | 📝 Create a new Lit Action                |
+| `getlit new` \| `action` | `getlit new [<lit-action-name>]` | 📝 Create a new Lit Action                |
 | `getlit test`            | `getlit test [<lit-action-name>]`   | 🧪 Test a Lit Action                      |
 | `getlit watch`           | `getlit watch [<lit-action-name>]`  | 🔧 Simultaneously build and test a Lit Action |
 | `getlit setup`           | `getlit setup`                      | 🔑 Setup config for authSig and PKP      |
