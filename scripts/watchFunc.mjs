@@ -26,14 +26,25 @@ export const watchFunc = async ({ args }) => {
   await getConfigFile();
   const proj = await getLitProjectMetaData();
 
-  const files = await fs.promises.readdir(proj.out);
+  let files;
+
+  try {
+    files = await fs.promises.readdir(proj.out);
+  } catch (e) {
+    redLog(
+      `\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`
+    );
+    process.exit();
+  }
+
   if (!files || files.length <= 0) {
-    redLog(`\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`);
+    redLog(
+      `\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`
+    );
     process.exit();
   }
 
   const selectedAction = await getActionName(args);
-  
 
   // nodemon --watch /Users/user/Projects/test/test-cli/lit_actions/src/ --ext ts --exec "getlit build pear && getlit test pear"
   const cmd = `nodemon --watch ${proj.src} --ext ts --exec "getlit build ${selectedAction} && getlit test ${selectedAction}"`;

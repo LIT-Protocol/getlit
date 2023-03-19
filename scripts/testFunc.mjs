@@ -34,6 +34,8 @@ export const getConfigFile = async () => {
 };
 
 export async function testFunc({ args }) {
+  console.log('testFunc', args);
+
   // -- validate
   const userConfig = await getConfigFile();
   const proj = await getLitProjectMetaData();
@@ -41,9 +43,18 @@ export async function testFunc({ args }) {
   let actionName = args[0];
 
   if (!actionName) {
-    const files = (await fs.promises.readdir(proj.out)).map((file) =>
-      removeExtension(file)
-    );
+    let files;
+
+    try {
+      files = await fs.promises.readdir(proj.out);
+    } catch (e) {
+      redLog(
+        `\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`
+      );
+      process.exit();
+    }
+
+    files = files.map((file) => removeExtension(file));
 
     const { name } = await inquirer.prompt([
       {
