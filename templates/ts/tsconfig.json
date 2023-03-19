@@ -9,5 +9,5 @@
     "typeRoots": ["./src/types"], 
     "baseUrl": "./src"
   },
-  "include": ["globa.d.ts"]
+  "include": ["globa.d.ts", "src/*"]
 }
