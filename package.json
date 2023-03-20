@@ -1,7 +1,7 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.9.14",
+  "version": "0.9.15",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
