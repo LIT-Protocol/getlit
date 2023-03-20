@@ -1,14 +1,14 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.9.9",
+  "version": "0.9.11",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
-  "homepage": "https://raw.githubusercontent.com/LIT-Protocol/getlit",
+  "homepage": "https://github.com/LIT-Protocol/getlit",
   "repository": {
     "type": "git",
-    "url": "https://raw.githubusercontent.com/LIT-Protocol/getlit"
+    "url": "https://github.com/LIT-Protocol/getlit"
   },
   "scripts": {
     "start": "node main.mjs",
