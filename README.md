@@ -30,6 +30,13 @@ To use the GetLit CLI, simply run the desired command followed by any required o
 
 ## Demos
 
+1. [Initialising a project](#initialising-a-project)
+2. [Building your Lit Actions](#building-your-lit-actions)
+3. [Setting up `authSig` & `pkpPublicKey` and testing a Lit Action](#setting-up-authsig--pkppublickey-and-testing-a-lit-action)
+4. [Watch for file changes, build and test a Lit Action](#watch-for-file-changes-build-and-test-a-lit-action)
+5. [Syntax highlighting for Lit Actions SDK](#syntax-highlighting-for-lit-actions-sdk)
+
+
 ## Intialising a project
 [![getlit init](https://img.youtube.com/vi/pObLTTb-mLE/0.jpg)](https://www.youtube.com/watch?v=pObLTTb-mLE)
 
