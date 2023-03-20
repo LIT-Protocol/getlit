@@ -1,5 +1,7 @@
 # GetLit CLI
 
+![](https://raw.githubusercontent.com/LIT-Protocol/getlit/main/banner.png)
+
 The GetLit CLI is a command-line tool designed to help developers manage their Lit Actions projects. The CLI provides a set of commands to create, build, test, and configure Lit Actions.
 
 ## Getting Started
