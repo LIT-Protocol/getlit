@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bodyParser from 'body-parser';
-import { getLitProjectMetaData, greenLog, redLog } from '../utils.mjs';
+import { getLitProjectMetaData, greenLog, projectCreated, redLog } from '../utils.mjs';
 import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,6 +13,10 @@ const app = express();
 
 //
 export const setupFunc = async () => {
+
+  // -- validate
+  const paths = await projectCreated();
+
   app.use(bodyParser.json());
 
   const port = LIT_CONFIG.tempServerPort;

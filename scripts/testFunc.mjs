@@ -3,6 +3,7 @@ import {
   childRunCommand,
   getLitProjectMetaData,
   greenLog,
+  projectCreated,
   redLog,
 } from '../utils.mjs';
 import fs from 'fs';
@@ -34,9 +35,8 @@ export const getConfigFile = async () => {
 };
 
 export async function testFunc({ args }) {
-  console.log('testFunc', args);
-
   // -- validate
+  const paths = await projectCreated();
   const userConfig = await getConfigFile();
   const proj = await getLitProjectMetaData();
 

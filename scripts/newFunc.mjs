@@ -3,6 +3,7 @@ import {
   findDirs,
   getLitProjectMetaData,
   greenLog,
+  projectCreated,
   readSdkFile,
   redLog,
   usageLog,
@@ -22,18 +23,8 @@ const exts = (str) => {
 };
 
 export async function newFunc({ args }) {
-  // if (!args[0]) {
-  //   usageLog({
-  //     usage: 'getlit action <lit-action-name>',
-  //     options: [
-  //       {
-  //         name: 'lit-action-name',
-  //         description: 'the name of the lit action',
-  //       },
-  //     ],
-  //   });
-  //   process.exit();
-  // }
+  // -- validate
+  await projectCreated();
 
   const proj = await getLitProjectMetaData();
 
@@ -51,7 +42,7 @@ export async function newFunc({ args }) {
         type: 'input',
         name: 'name',
         message: 'What do you want to name the action?',
-        default: 'main',
+        default: 'bar',
       },
     ]);
 

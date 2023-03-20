@@ -2,6 +2,7 @@ import {
   childRunCommand,
   getConfigFile,
   getLitProjectMetaData,
+  projectCreated,
   redLog,
   selectTest,
 } from '../utils.mjs';
@@ -23,6 +24,7 @@ const getActionName = async (args) => {
 
 export const watchFunc = async ({ args }) => {
   // -- get var and validate
+  const paths = await projectCreated();
   await getConfigFile();
   const proj = await getLitProjectMetaData();
 

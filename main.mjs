@@ -18,9 +18,9 @@ let COMMAND = args[0];
 
 const commandMaps = [
   {
-    name: 'init',
-    aliases: ['here'],
-    usage: 'getlit init',
+    name: 'action',
+    aliases: ['init', 'here'],
+    usage: 'getlit action',
     description: '🏁 Initialise a new Lit project',
     fn: initFunc,
   },
@@ -34,7 +34,7 @@ const commandMaps = [
   {
     name: 'new',
     aliases: ['action'],
-    usage: 'getlit action [<lit-action-name>]',
+    usage: 'getlit new [<lit-action-name>]',
     description: '📝 Create a new Lit Action',
     fn: newFunc,
   },

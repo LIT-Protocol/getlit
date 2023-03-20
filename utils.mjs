@@ -688,3 +688,18 @@ export const getConfigFile = async () => {
 
   return configFileJson;
 };
+
+export const projectCreated = async () => {
+  const userWorkingDir = process.cwd();
+
+  const litProjectPaths = await findDirs(userWorkingDir);
+
+  if (litProjectPaths.length <= 0) {
+    redLog(
+      `\n❌ Looks like you haven't created a project yet. Please run \`getlit here\` to create a project first.\n`
+    );
+    process.exit();
+  }
+
+  return litProjectPaths;
+};
