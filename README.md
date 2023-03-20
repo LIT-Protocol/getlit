@@ -19,14 +19,14 @@ To use the GetLit CLI, simply run the desired command followed by any required o
 
 | Command                  | Usage                               | Description                               |
 | ------------------------ | ----------------------------------- | ----------------------------------------- |
-| `getlit init` \| `here` | `getlit init`                       | 🏁 Initialise a new Lit project           |
-| `getlit build`           | `getlit build`                      | 🏗  Build your Lit Actions                |
-| `getlit new` \| `action` | `getlit new [<lit-action-name>]` | 📝 Create a new Lit Action                |
-| `getlit test`            | `getlit test [<lit-action-name>]`   | 🧪 Test a Lit Action                      |
-| `getlit watch`           | `getlit watch [<lit-action-name>]`  | 🔧 Simultaneously build and test a Lit Action |
-| `getlit setup`           | `getlit setup`                      | 🔑 Setup config for authSig and PKP      |
-| `getlit docs` \| `doc` | `getlit docs`                       | 📖 Open the Lit Protocol documentation   |
-| `getlit help` \|  `show` | `help`    | 🆘 Show the help menu                     |
+| `action` \| `init` | `getlit action`                       | 🏁 Initialise a new Lit project           |
+| `build`           | `getlit build`                      | 🏗  Build your Lit Actions                |
+| `new` | `getlit new [<lit-action-name>]` | 📝 Create a new Lit Action                |
+| `test`            | `getlit test [<lit-action-name>]`   | 🧪 Test a Lit Action                      |
+| `watch`           | `getlit watch [<lit-action-name>]`  | 🔧 Simultaneously build and test a Lit Action |
+| `setup`           | `getlit setup`                      | 🔑 Setup config for authSig and PKP      |
+| `docs` \| `doc` | `getlit docs`                       | 📖 Open the Lit Protocol documentation   |
+| `help` \|  `show` | `getlit help`    | 🆘 Show the help menu                     |
 
 ## Demos
 

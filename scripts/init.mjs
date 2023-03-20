@@ -42,7 +42,7 @@ export const initFunc = async ({ args }) => {
     _srcDir = fixPath(PROMPT_DIR);
   } else {
     usageLog({
-      usage: `getlit init`,
+      usage: `getlit action | init`,
       options: [{
         name: `path`,
         description: `the directory to install the project in, default ./`
