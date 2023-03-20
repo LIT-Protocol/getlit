@@ -32,12 +32,13 @@ To use the GetLit CLI, simply run the desired command followed by any required o
 
 1. [Initialising a project](#initialising-a-project)
 2. [Building your Lit Actions](#building-your-lit-actions)
-3. [Setting up `authSig` & `pkpPublicKey` and testing a Lit Action](#setting-up-authsig--pkppublickey-and-testing-a-lit-action)
+3. [Setting up `authSig` & `pkpPublicKey` and test a Lit Action](#setting-up-authsig--pkppublickey-and-test-a-lit-action)
 4. [Watch for file changes, build and test a Lit Action](#watch-for-file-changes-build-and-test-a-lit-action)
 5. [Syntax highlighting for Lit Actions SDK](#syntax-highlighting-for-lit-actions-sdk)
 
 
-## Intialising a project
+## Initialising a project
+
 [![getlit init](https://img.youtube.com/vi/pObLTTb-mLE/0.jpg)](https://www.youtube.com/watch?v=pObLTTb-mLE)
 
 ## Building your Lit Actions
@@ -56,7 +57,7 @@ Before running a Lit Action, you must obtain your authSig and PKP Public Key to 
 
 [![getlit watch](https://img.youtube.com/vi/ca1MiJACkTs/0.jpg)](https://www.youtube.com/watch?v=ca1MiJACkTs)
 
-## Syntax highligting for Lit Actions SDK 
+## Syntax highlighting for Lit Actions SDK 
 
 Syntax highlighting for the Lit Actions SDK (which refers to the exported functions that reside and can only be accessed on Lit Protocol nodes) is available for improved readability and ease of use.
 
