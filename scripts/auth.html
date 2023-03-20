@@ -103,6 +103,31 @@
       return data;
     }
 
+    async function applyOnClickListeners() {
+      return new Promise((resolve) => {
+        const pkpList = document.querySelectorAll('#pkps li');
+
+        pkpList.forEach((pkp, index) => {
+          pkp.addEventListener('click', async () => {
+            pkpList.forEach((pkp) => pkp.classList.remove('selected'));
+            pkp.classList.add('selected');
+            selectedPKP.innerHTML = pkp.innerHTML;
+
+            const data = await sendAuthSigToServer(authSig, pkp.innerHTML);
+            console.log("data:", data);
+
+            alert("You can close this window now");
+            window.close();
+          });
+
+          // Resolve the promise after the last click listener is applied
+          if (index === pkpList.length - 1) {
+            resolve();
+          }
+        });
+      });
+    }
+
 
     (async () => {
       // console.log(LitJsSdk_litNodeClient);
@@ -150,6 +175,7 @@
 
       // append a button to the above element
       const button = document.createElement('button');
+      button.id = "mintButton";
       button.innerHTML = "Mint PKP!";
       button.addEventListener('click', async () => {
         // refresh the page
@@ -179,9 +205,16 @@
           try {
             const pubKey = await litContracts.pkpNftContract.read.getPubkey(tokenId);
             console.log("pubKey:", pubKey);
+            
+            pkpElem.innerHTML += `<li>${pubKey}</li>`;
 
-            const data = await sendAuthSigToServer(authSig, pubKey)
-            console.log("data:", data);
+            applyOnClickListeners();
+            const mintButton = document.getElementById('mintButton');
+            mintButton.innerHTML = "✅ Minted!";
+
+            setTimeout(() => {
+              mintButton.innerHTML = "Mint PKP!";
+            }, 2000)
           } catch (e) {
             window.location.reload();
           }
@@ -208,21 +241,7 @@
       pkpElem.innerHTML = pubKeys.map((pkp) => `<li>${pkp}</li>`).join('');
 
       // make each pkp selectable and set the selected pkp to the selectedPKP span
-      const pkpList = document.querySelectorAll('#pkps li');
-
-      pkpList.forEach((pkp) => {
-        pkp.addEventListener('click', async () => {
-          pkpList.forEach((pkp) => pkp.classList.remove('selected'));
-          pkp.classList.add('selected');
-          selectedPKP.innerHTML = pkp.innerHTML;
-
-          const data = await sendAuthSigToServer(authSig, pkp.innerHTML)
-          console.log("data:", data);
-
-          alert("You can close this window now");
-          window.close();
-        });
-      });
+      applyOnClickListeners();
 
       // -- select pkp
       const selectedPKP = document.getElementById('selectedPKP');
