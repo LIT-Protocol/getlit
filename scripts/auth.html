@@ -103,7 +103,7 @@
       return data;
     }
 
-    async function applyOnClickListeners() {
+    async function applyOnClickListeners(authSig) {
       return new Promise((resolve) => {
         const pkpList = document.querySelectorAll('#pkps li');
 
@@ -208,7 +208,7 @@
             
             pkpElem.innerHTML += `<li>${pubKey}</li>`;
 
-            applyOnClickListeners();
+            applyOnClickListeners(authSig);
             const mintButton = document.getElementById('mintButton');
             mintButton.innerHTML = "✅ Minted!";
 
@@ -241,7 +241,7 @@
       pkpElem.innerHTML = pubKeys.map((pkp) => `<li>${pkp}</li>`).join('');
 
       // make each pkp selectable and set the selected pkp to the selectedPKP span
-      applyOnClickListeners();
+      applyOnClickListeners(authSig);
 
       // -- select pkp
       const selectedPKP = document.getElementById('selectedPKP');
