@@ -101,6 +101,38 @@ export const getLitProjectMetaData = async () => {
   };
 };
 
+export function removeExtension(filename) {
+  return filename.replace(/\.action\.[^/.]+$/, '');
+}
+
+export const selectSrc = async () => {
+  const proj = await getLitProjectMetaData();
+
+  let files;
+
+  try {
+    files = await fs.promises.readdir(proj.out);
+  } catch (e) {
+    redLog(
+      `\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`
+    );
+    process.exit();
+  }
+
+  files = files.map((file) => removeExtension(file));
+
+  const { name } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'name',
+      message: 'Which action do you want to test?',
+      choices: files,
+    },
+  ]);
+
+  return name;
+};
+
 export const humanizeBytes = (bytes) => {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 
