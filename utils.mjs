@@ -105,7 +105,7 @@ export function removeExtension(filename) {
   return filename.replace(/\.action\.[^/.]+$/, '');
 }
 
-export const selectSrc = async () => {
+export const selectSrc = async (action = 'test') => {
   const proj = await getLitProjectMetaData();
 
   let files;
@@ -125,7 +125,7 @@ export const selectSrc = async () => {
     {
       type: 'list',
       name: 'name',
-      message: 'Which action do you want to test?',
+      message: `Which action do you want to ${action}?`,
       choices: files,
     },
   ]);

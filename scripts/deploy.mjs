@@ -9,7 +9,7 @@ import fs from 'fs';
 const IPFS_GATEWAY = `https://ipfs.litgateway.com/ipfs/`;
 
 export async function deployFunc({ args }) {
-  const actionName = args[0] || (await selectSrc());
+  const actionName = args[0] || (await selectSrc('deploy'));
 
   const proj = await getLitProjectMetaData();
 
