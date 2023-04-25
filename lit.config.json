@@ -14,7 +14,7 @@
   "schemaPaths": {
     "litActionSchema": "$schemas/lit-action-schema.json"
   },
-  "tempServerPort": 1209,
+  "tempServerPort": 1210,
   "sizeLimitBytes": 1048576,
   "defaultSrcTemplate": "templates/template.action.ts",
   "defaultTestTemplate": "templates/template.t.action.mjs",

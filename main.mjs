@@ -10,6 +10,7 @@ import { setupFunc } from './scripts/setup.mjs';
 import { newFunc } from './scripts/newFunc.mjs';
 import { testFunc } from './scripts/testFunc.mjs';
 import { watchFunc } from './scripts/watchFunc.mjs';
+import { deployFunc } from './scripts/deploy.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -66,6 +67,13 @@ const commandMaps = [
     description: '📖 Open the Lit Protocol documentation',
     fn: docsFunc,
     type: 'help',
+  },
+  {
+    name: 'deploy',
+    aliases: [],
+    usage: 'getlit deploy',
+    description: '🚀 Deploy your Lit Actions',
+    fn: deployFunc,
   },
   {
     name: 'help',

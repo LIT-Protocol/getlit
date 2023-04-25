@@ -5,12 +5,10 @@ import {
   greenLog,
   projectCreated,
   redLog,
+  removeExtension,
+  selectSrc,
 } from '../utils.mjs';
 import fs from 'fs';
-
-function removeExtension(filename) {
-  return filename.replace(/\.action\.[^/.]+$/, '');
-}
 
 export const getConfigFile = async () => {
   const proj = await getLitProjectMetaData();
@@ -40,33 +38,7 @@ export async function testFunc({ args }) {
   const userConfig = await getConfigFile();
   const proj = await getLitProjectMetaData();
 
-  let actionName = args[0];
-
-  if (!actionName) {
-    let files;
-
-    try {
-      files = await fs.promises.readdir(proj.out);
-    } catch (e) {
-      redLog(
-        `\n⛔️ No files found in ${proj.out}.\n   Please run "getlit build" first\n`
-      );
-      process.exit();
-    }
-
-    files = files.map((file) => removeExtension(file));
-
-    const { name } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'name',
-        message: 'Which action do you want to test?',
-        choices: files,
-      },
-    ]);
-
-    actionName = name;
-  }
+  const actionName = args[0] || (await selectSrc());
 
   const testFile = proj.test + actionName + '.t.action.mjs';
 

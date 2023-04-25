@@ -82,13 +82,13 @@
   <div id="pkps">Loading PKPs...</div>
   <div id="info"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/lit-node-client-vanilla/lit-node-client.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/contracts-sdk-vanilla/contracts-sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/lit-node-client-vanilla@2.1.118/lit-node-client.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@lit-protocol/contracts-sdk-vanilla@2.1.118/contracts-sdk.js"></script>
 
   <script>
 
     async function sendAuthSigToServer(authSig, pkpPublicKey) {
-      const response = await fetch('http://localhost:1209/api', {
+      const response = await fetch('http://localhost:1210/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,7 +169,7 @@
       // append a message that they can get faucet from this url
       // https://faucet.litprotocol.com/
       const faucetMsg = document.createElement('p');
-      faucetMsg.innerHTML = "You can get some FREE MATIC from the <a href='https://faucet.litprotocol.com/' target='_blank'>Lit Faucet</a>."
+      faucetMsg.innerHTML = "You can get some FREE LIT from the <a href='https://faucet.litprotocol.com/' target='_blank'>Lit Faucet</a>."
       infoElem.appendChild(faucetMsg);
 
 
