@@ -49,7 +49,7 @@ try {
   );
 
   client = new LitJsSdk.LitNodeClientNodeJs({
-    litNetwork: 'serrano',
+    litNetwork: 'cayenne',
     // debug: false
   });
   await client.connect();
