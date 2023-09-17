@@ -7,14 +7,22 @@ export async function deriveFunc({ args }) {
   let params = processArgs(args);
   let keyId = client.computeHDKeyId(params.userId, params.appId);
   keyId = keyId.replace('0x', "");
+
+
   const pubkey = client.computeHDPubKey(keyId);
   const compressedPubkey = await compressPubKey(pubkey);
-  greenLog(`derived public key:  ${pubkey}`);
-  greenLog(`derived compressed public key: ${compressedPubkey}`);
+  if (params.format == 'compressed') {
+    greenLog(`derived public key: ${compressedPubkey}`); 
+  } else if (params.format == 'uncompressed') {
+    greenLog(`derived public key:  ${pubkey}`); 
+  } else {
+    greenLog(`derived uncompressed public key:  ${pubkey}`);
+    greenLog(`derived compressed public key: ${compressedPubkey}`);
+  }
 }
 
 function processArgs(args) {
-    if (args.length != 2) {
+    if (args.length < 2) {
         throw new Error("Invalid number of arguments aborting");
         return;
     }
@@ -22,7 +30,11 @@ function processArgs(args) {
     for (let arg of args) {
         arg = arg.replaceAll("-", "");
         let parts = arg.split("=");
-        params[parts[0]] = parts[1];
+        if (parts.length == 2) {
+          params[parts[0]] = parts[1];
+        } else {
+          params[parts[0]] = true;
+        }
     }
 
     return params;

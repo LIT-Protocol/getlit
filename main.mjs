@@ -87,9 +87,11 @@ const commandMaps = [
   {
     name: 'derive-pkp',
     aliases: ['pubkey'],
-    description: 'derive a public key from a user id and application id',
-    fn: deriveFunc
-  }
+    usage: 'getlit derive-pkp --user_id <user id> provided user id --project_id <project id> provided project id  --format <compressed | uncompressed | default> format for public key, defaults to uncompressed',
+    description:
+      'derive a public key from a user id and application id',
+    fn: deriveFunc,
+  },
 ];
 
 const setup = () => {
