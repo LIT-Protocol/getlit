@@ -1,7 +1,7 @@
 {
   "bin": "./main.mjs",
   "name": "getlit",
-  "version": "0.9.23",
+  "version": "0.10.0",
   "main": "./main.mjs",
   "license": "MIT",
   "type": "commonjs",
@@ -15,14 +15,14 @@
     "lit protocol"
   ],
   "scripts": {
-    "start": "node main.mjs",
-    "dev": "nodemon main.mjs",
-    "v": "node tools.mjs v",
-    "tool": "node tools.mjs",
-    "bump": "node tools.mjs bump --patch"
+    "start": "bun main.mjs",
+    "dev": "bun main.mjs",
+    "v": "bun tools.mjs v",
+    "tool": "bun tools.mjs",
+    "bump": "bun tools.mjs bump --patch"
   },
   "dependencies": {
-    "@lit-protocol/lit-node-client-nodejs": "^2.1.90",
+    "@lit-protocol/lit-node-client-nodejs": "3.0.0@cayenne",
     "ajv": "^8.12.0",
     "body-parser": "^1.20.2",
     "esbuild": "^0.17.11",
@@ -31,7 +31,8 @@
     "gradient-string": "^2.0.2",
     "inquirer": "^9.1.4",
     "nodemon": "^2.0.21",
-    "open": "^8.4.2"
+    "open": "^8.4.2",
+    "secp256k1": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",

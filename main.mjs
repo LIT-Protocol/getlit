@@ -11,6 +11,7 @@ import { newFunc } from './scripts/newFunc.mjs';
 import { testFunc } from './scripts/testFunc.mjs';
 import { watchFunc } from './scripts/watchFunc.mjs';
 import { deployFunc } from './scripts/deploy.mjs';
+import { deriveFunc } from './scripts/derive.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -82,6 +83,14 @@ const commandMaps = [
     description: '🆘 Show the help menu',
     fn: helpFunc,
     type: 'help',
+  },
+  {
+    name: 'derive-pkp',
+    aliases: ['pubkey'],
+    usage: 'getlit derive-pkp --user_id <user id> provided user id --project_id <project id> provided project id  --format <compressed | uncompressed | default> format for public key, defaults to uncompressed',
+    description:
+      'derive a public key from a user id and application id',
+    fn: deriveFunc,
   },
 ];
 
