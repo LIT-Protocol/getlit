@@ -15,11 +15,11 @@
     "lit protocol"
   ],
   "scripts": {
-    "start": "node main.mjs",
-    "dev": "nodemon main.mjs",
-    "v": "node tools.mjs v",
-    "tool": "node tools.mjs",
-    "bump": "node tools.mjs bump --patch"
+    "start": "bun main.mjs",
+    "dev": "bun main.mjs",
+    "v": "bun tools.mjs v",
+    "tool": "bun tools.mjs",
+    "bump": "bun tools.mjs bump --patch"
   },
   "dependencies": {
     "@lit-protocol/lit-node-client-nodejs": "3.0.0@cayenne",
