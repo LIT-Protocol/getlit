@@ -2,22 +2,24 @@ import { greenLog } from '../utils.mjs';
 
 
 export async function deriveFunc({ args }) {
-  
-  let client = await bootstrapClient();
   let params = processArgs(args);
+  let client = await bootstrapClient();
   let keyId = client.computeHDKeyId(params.userId, params.appId);
   keyId = keyId.replace('0x', "");
 
 
   const pubkey = client.computeHDPubKey(keyId);
   const compressedPubkey = await compressPubKey(pubkey);
+  const ethAddr = await ethAddress(pubkey);
   if (params.format == 'compressed') {
     greenLog(`derived public key: ${compressedPubkey}`); 
   } else if (params.format == 'uncompressed') {
-    greenLog(`derived public key:  ${pubkey}`); 
+    greenLog(`derived public key:  ${pubkey}`);
+    greenLog(`derived ethereum address: ${ethAddr}`); 
   } else {
     greenLog(`derived uncompressed public key:  ${pubkey}`);
     greenLog(`derived compressed public key: ${compressedPubkey}`);
+    greenLog(`derived ethereum address: ${ethAddr}`);
   }
 }
 
@@ -78,4 +80,11 @@ async function compressPubKey(pubKey) {
     return hex;
 };
 
+
+async function ethAddress(pubkey) {
+  console.log(pubkey);
+  const pubKeyToAddr = await import('ethereum-public-key-to-address');
+  const addr = pubKeyToAddr.default(pubkey)
+  return addr;
+}
 
