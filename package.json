@@ -15,14 +15,15 @@
     "lit protocol"
   ],
   "scripts": {
-    "start": "bun main.mjs",
-    "dev": "bun main.mjs",
-    "v": "bun tools.mjs v",
-    "tool": "bun tools.mjs",
-    "bump": "bun tools.mjs bump --patch"
+    "start": "node main.mjs",
+    "dev": "nde main.mjs",
+    "v": "node tools.mjs v",
+    "tool": "node tools.mjs",
+    "bump": "node tools.mjs bump --patch"
   },
   "dependencies": {
-    "@lit-protocol/lit-node-client-nodejs": "3.0.0@cayenne",
+    "@lit-protocol/lit-node-client-nodejs": "3.0.15@cayenne",
+    "@lit-protocol/contracts-sdk": "3.0.15@cayenne",
     "ajv": "^8.12.0",
     "body-parser": "^1.20.2",
     "ethereum-public-key-to-address": "0.0.5",

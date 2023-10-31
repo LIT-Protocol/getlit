@@ -1,22 +1,23 @@
 import { greenLog } from '../utils.mjs';
-import { pkpPermissions } from './abi/pkpPermissions.data';
-import { Contract, providers } from 'ethers';
+import {LitContracts} from "@lit-protocol/contracts-sdk";
+import {providers, ethers} from "ethers";
+
 export async function pkpSearchFunc({ args }) {
     let params = processArgs(args);
-    let rpcProvider = providers.JsonRpcProvider("https://chain-rpc.litprotocol.com/http", 175177);
-    let pkpHelperContract = bootstrapClient(rpcProvider);
-
-    switch(params.by) {
-        case "authMethod":
-            const pkps = await searchByAuthMethodId(pkpHelperContract, params.tokenId, params.authMethodType);
-            greenLog(`pkps for auth method id: ${params.tokenId}\n${pkps}`);
-            break;
-    }
+    let rpcProvider = new providers.JsonRpcProvider("https://chain-rpc.litprotocol.com/http", 175177);
+    let contractsClient = bootstrapClient(rpcProvider);
+    
+    await contractsClient.connect();
 
     switch(params.get) {
         case "authMethodScopes":
-            const scopes = await getAuthMethodScopes(pkpHelperContract, params.tokenId, params.authMethodId);
-            greenLog(`permission scopes for auth method id: ${params.tokenId}\n${scopes}`);
+            const scopes = await getAuthMethodScopes(contractsClient, params.publicKey, params.authMethodId, params.type);
+            greenLog(`${params.tokenId}\n${scopes}`);
+            break;
+        
+        case "authMethods":
+            const authMethods = await searchAuthMethods(contractsClient, params.publicKey);
+            greenLog(`${authMethods}`);
             break;
     }
 }
@@ -42,16 +43,20 @@ function processArgs(args) {
 }
 
 function bootstrapClient(provider) {
-    let contract = new Contract(pkpPermissions.address, pkpPermissions.abi, provider);
+    let contract = new LitContracts({
+        signer: provider
+    });
     return contract;
 }
 
-async function searchByAuthMethodId(client, authMethodId, authMethodType) {
-    const tokenIds = await client.getTokenIdsForAuthMethod(authMethodId, authMethodType);
+async function searchAuthMethods(client, pk) {
+    let tokenId = ethers.utils.keccak256(`0x${pk}`);
+    const tokenIds = await client.pkpPermissionsContract.read.getPermittedAuthMethods(tokenId);
     return tokenIds;
 }
 
-async function getAuthMethodScopes(client, tokenId, authMethodId, authMethodType) {
-    const scopes = await client.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
+async function getAuthMethodScopes(client, pk, authMethodId, authMethodType) {
+    let tokenId = ethers.utils.keccak256(`0x${pk}`);
+    const scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
     return scopes;
 }
