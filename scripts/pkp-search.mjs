@@ -19,7 +19,20 @@ export async function pkpSearchFunc({ args }) {
             const authMethods = await searchAuthMethods(contractsClient, params.publicKey);
             greenLog(`${authMethods}`);
             break;
+        
+        case "ethAddr":
+            const ethAddr = await getEthAddress(client, params.publicKey);
+            greenLog(ethAddr);
+            break;
+        
+        case "tokenIds":
+            const tokenIds = await getTokenIdsByAuthMethod(contractsClient, params.authMethodId, params.clientId, params.appId, params.type);
+            greenLog(`${tokenIds}`);
+            break;
     }
+
+
+    process.exit(0);
 }
 
 
@@ -59,4 +72,20 @@ async function getAuthMethodScopes(client, pk, authMethodId, authMethodType) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
     const scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
     return scopes;
+}
+
+async function getEthAddress(client, pk) {
+    let tokenId = ethers.utils.keccak256(`0x${pk}`);
+    const ethAddr = await client.pkpPermissionsContract.read.getEthAddress(tokenId);
+    return ethAddr;
+}
+
+async function getTokenIdsByAuthMethod(client, authMethodId, clientId, appId, type) {
+    if (!authMethodId) {
+        authMethodId = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(`${clientId}:${appId}`));
+    }
+
+    const tokenIds = await client.pkpPermissionsContract.read.getTokenIdsForAuthMethod(type, authMethodId);
+
+    return tokenIds;
 }
