@@ -1,4 +1,4 @@
-import { greenLog } from '../utils.mjs';
+import { greenLog, tableLog } from '../utils.mjs';
 import {LitContracts} from "@lit-protocol/contracts-sdk";
 import {providers, ethers} from "ethers";
 
@@ -9,15 +9,17 @@ export async function pkpSearchFunc({ args }) {
     
     await contractsClient.connect();
 
-    switch(params.get) {
+    switch(params.by) {
         case "authMethodScopes":
             const scopes = await getAuthMethodScopes(contractsClient, params.publicKey, params.authMethodId, params.type);
-            greenLog(`${params.tokenId}\n${scopes}`);
+            !params.format && greenLog(`${params.tokenId}\n${scopes}`);
+            params.format === "table" && tableLog(scopes);
             break;
         
         case "authMethods":
             const authMethods = await searchAuthMethods(contractsClient, params.publicKey);
-            greenLog(`${authMethods}`);
+            !params.format && greenLog(`${authMethods}`);
+            params.format === "table" && tableLog(authMethods);
             break;
         
         case "ethAddr":
@@ -64,8 +66,16 @@ function bootstrapClient(provider) {
 
 async function searchAuthMethods(client, pk) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
-    const tokenIds = await client.pkpPermissionsContract.read.getPermittedAuthMethods(tokenId);
-    return tokenIds;
+    let authMethods = await client.pkpPermissionsContract.read.getPermittedAuthMethods(tokenId);
+    let authMethodObjs = []
+    for (const authMethod of authMethods) {
+        authMethodObjs.push({
+            authMethodType: authMethod[0]._hex,
+            authMethodiId: authMethod[1],
+            pubKey: authMethod[2],
+        });
+    }
+    return authMethodObjs;
 }
 
 async function getAuthMethodScopes(client, pk, authMethodId, authMethodType) {

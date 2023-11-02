@@ -22,8 +22,8 @@
     "bump": "node tools.mjs bump --patch"
   },
   "dependencies": {
-    "@lit-protocol/lit-node-client-nodejs": "3.0.15@cayenne",
-    "@lit-protocol/contracts-sdk": "3.0.15@cayenne",
+    "@lit-protocol/lit-node-client-nodejs": "3.0.15",
+    "@lit-protocol/contracts-sdk": "3.0.15",
     "ajv": "^8.12.0",
     "body-parser": "^1.20.2",
     "ethereum-public-key-to-address": "0.0.5",

@@ -390,6 +390,11 @@ export const greenLog = (msg, noDash = false) => {
   }
 };
 
+export const tableLog = (object, properties = undefined) => {
+  properties && console.table(object, properties);
+  !properties && console.table(object);
+}
+
 export const usageLog = ({ usage, options }) => {
   const optionsStr = options.map((option) => {
     return `    <${option.name}>  ${option.description}`;
