@@ -26,11 +26,11 @@ export async function deployFunc({ args }) {
     process.exit();
   }
 
-  const tsHash = await upload(actionFileTsContent);
+  const tsHash = await upload(actionFileTsContent, actionFile);
 
   actionFileContent = insertSrc(actionFileContent, `TYPESCRIPT SOURCE: ${IPFS_GATEWAY}${tsHash}`);
 
-  const ipfsHash = await upload(actionFileContent);
+  const ipfsHash = await upload(actionFileContent, actionFile);
 
   greenLog(`\n🚀 Action deployed at ${IPFS_GATEWAY}${ipfsHash}\n`);
 
@@ -60,7 +60,7 @@ function insertSrc(text, srcText) {
   return `${beforeName} * ${srcText}\n${afterName}`;
 }
 
-async function upload(code) {
+async function upload(code, actionFile) {
   const url = 'https://lit-actions-deployer.herokuapp.com/';
   let data;
   try {
