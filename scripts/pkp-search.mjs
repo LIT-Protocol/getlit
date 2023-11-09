@@ -9,7 +9,7 @@ export async function pkpSearchFunc({ args }) {
     
     await contractsClient.connect();
 
-    switch(params.by) {
+    switch(params.get) {
         case "authMethodScopes":
             const scopes = await getAuthMethodScopes(contractsClient, params.publicKey, params.authMethodId, params.type);
             !params.format && greenLog(`${params.tokenId}\n${scopes}`);
@@ -18,7 +18,7 @@ export async function pkpSearchFunc({ args }) {
         
         case "authMethods":
             const authMethods = await searchAuthMethods(contractsClient, params.publicKey);
-            !params.format && greenLog(`${authMethods}`);
+            !params.format && greenLog(`${JSON.stringify(authMethods)}`);
             params.format === "table" && tableLog(authMethods);
             break;
         
@@ -32,7 +32,6 @@ export async function pkpSearchFunc({ args }) {
             greenLog(`${tokenIds}`);
             break;
     }
-
 
     process.exit(0);
 }
@@ -80,13 +79,20 @@ async function searchAuthMethods(client, pk) {
 
 async function getAuthMethodScopes(client, pk, authMethodId, authMethodType) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
-    const scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
+    let scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
+    scopes = {
+        scopes
+    };
     return scopes;
 }
 
 async function getEthAddress(client, pk) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
-    const ethAddr = await client.pkpPermissionsContract.read.getEthAddress(tokenId);
+    let ethAddr = await client.pkpPermissionsContract.read.getEthAddress(tokenId);
+    ethAddr = {
+        address: ethAddr
+    };
+
     return ethAddr;
 }
 
