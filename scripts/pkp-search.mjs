@@ -24,12 +24,14 @@ export async function pkpSearchFunc({ args }) {
         
         case "ethAddr":
             const ethAddr = await getEthAddress(client, params.publicKey);
-            greenLog(ethAddr);
+            !params.format && greenLog(`${JSON.stringify(ethAddr)}`);
+            params.format === "table" && tableLog(ethAddr);
             break;
         
         case "tokenIds":
             const tokenIds = await getTokenIdsByAuthMethod(contractsClient, params.authMethodId, params.clientId, params.appId, params.type);
-            greenLog(`${tokenIds}`);
+            !params.format && greenLog(`${JSON.stringify(tokenIds)}`);
+            params.format === "table" && tableLog(tokenIds);
             break;
     }
 
@@ -101,7 +103,12 @@ async function getTokenIdsByAuthMethod(client, authMethodId, clientId, appId, ty
         authMethodId = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(`${clientId}:${appId}`));
     }
 
-    const tokenIds = await client.pkpPermissionsContract.read.getTokenIdsForAuthMethod(type, authMethodId);
+    let tokenIds = await client.pkpPermissionsContract.read.getTokenIdsForAuthMethod(type, authMethodId);
+    tokenIds = {
+        tokenIds
+    };
+    !params.format && greenLog(`${JSON.stringify(tokenIds)}`);
+    params.format === "table" && tableLog(tokenIds);
 
     return tokenIds;
 }
