@@ -4,6 +4,11 @@ import {providers, ethers} from "ethers";
 
 export async function pkpSearchFunc({ args }) {
     let params = processArgs(args);
+    
+    if (params.help) {
+        greenLog(printHelp());
+    }
+    
     let rpcProvider = new providers.JsonRpcProvider("https://chain-rpc.litprotocol.com/http", 175177);
     let contractsClient = bootstrapClient(rpcProvider);
     
@@ -11,8 +16,8 @@ export async function pkpSearchFunc({ args }) {
 
     switch(params.get) {
         case "authMethodScopes":
-            const scopes = await getAuthMethodScopes(contractsClient, params.publicKey, params.authMethodId, params.type);
-            !params.format && greenLog(`${params.tokenId}\n${scopes}`);
+            const scopes = await getAuthMethodScopes(contractsClient, params.publicKey, params.authMethodId, params.type, params.maxScope);
+            !params.format && greenLog(`${JSON.stringify(scopes)}`);
             params.format === "table" && tableLog(scopes);
             break;
         
@@ -38,12 +43,7 @@ export async function pkpSearchFunc({ args }) {
     process.exit(0);
 }
 
-
 function processArgs(args) {
-    if (args.length < 2) {
-        throw new Error("Invalid number of arguments aborting");
-        return;
-    }
     let params = {}
     for (let arg of args) {
         arg = arg.replaceAll("-", "");
@@ -65,6 +65,20 @@ function bootstrapClient(provider) {
     return contract;
 }
 
+function printHelp() {
+    const message = `
+usage: pkp-search <--get=<search-param>> <--pubKey=<public key>> <--authMethodId=<id>> <--authMethodType=<type>> 
+    [--clientId=<id>] [-appId=<id>] [--maxScope=<scopeIndex>]
+        
+    example: getlit pkp-search --get=authMethods --publicKey=<pkp-public-key>
+    example getlit pkp-search --get=authMethodScopes -publicKey=<pkp-public-key> --authMethodId=<id> --authMethodType=<type> --maxScope=5
+    example getlit pkp-search --get=ethAddr --pubKey=<pkp-public-key>
+        
+    search for pkp informaton related to a pkp or auth method meta data.
+`;
+    return message;
+}
+
 async function searchAuthMethods(client, pk) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
     let authMethods = await client.pkpPermissionsContract.read.getPermittedAuthMethods(tokenId);
@@ -79,9 +93,9 @@ async function searchAuthMethods(client, pk) {
     return authMethodObjs;
 }
 
-async function getAuthMethodScopes(client, pk, authMethodId, authMethodType) {
+async function getAuthMethodScopes(client, pk, authMethodId, authMethodType, maxScope = 3) {
     let tokenId = ethers.utils.keccak256(`0x${pk}`);
-    let scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, 200);
+    let scopes = await client.pkpPermissionsContract.read.getPermittedAuthMethodScopes(tokenId, authMethodType, authMethodId, maxScope);
     scopes = {
         scopes
     };

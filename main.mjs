@@ -95,7 +95,7 @@ const commandMaps = [
   },
   {
     name: 'search-pkp',
-    aliases: ['pkp-search'],
+    aliases: ['search', 'pkp-search'],
     fn: pkpSearchFunc,
     description: '🔍 Search for information related to PKPS',
     usage: "getlit search --get --format --publicKey --authMethodId --userId --appId"
