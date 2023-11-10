@@ -12,6 +12,7 @@ import { testFunc } from './scripts/testFunc.mjs';
 import { watchFunc } from './scripts/watchFunc.mjs';
 import { deployFunc } from './scripts/deploy.mjs';
 import { deriveFunc } from './scripts/derive.mjs';
+import { pkpSearchFunc } from './scripts/pkp-search.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -87,11 +88,18 @@ const commandMaps = [
   {
     name: 'derive-pkp',
     aliases: ['pubkey'],
-    usage: 'getlit derive-pkp --user_id <user id> provided user id --project_id <project id> provided project id  --format <compressed | uncompressed | default> format for public key, defaults to uncompressed',
+    usage: 'getlit derive-pkp --user_id --project_id --format',
     description:
-      'derive a public key from a user id and application id',
+      '🗝️ Derive a public key from a user id and application id',
     fn: deriveFunc,
   },
+  {
+    name: 'search-pkp',
+    aliases: ['search', 'pkp-search'],
+    fn: pkpSearchFunc,
+    description: '🔍 Search for information related to PKPS',
+    usage: "getlit search --get --format --publicKey --authMethodId --userId --appId"
+  }
 ];
 
 const setup = () => {

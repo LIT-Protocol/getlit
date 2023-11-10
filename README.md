@@ -29,5 +29,7 @@ To use the GetLit CLI, navigate to a directory or your existing project, and the
 | `watch`           | `getlit watch [<lit-action-name>]`  | 🔧 Simultaneously build and test a Lit Action |
 | `setup`           | `getlit setup`                      | 🔑 Setup config for authSig and PKP      |
 | `deploy` | `getlit deploy` |  Deploy your Lit Actions |
-| `docs` \| `doc` | `getlit docs`                       | 📖 Open the Lit Protocol documentation   |
+| `derive` | `getlit derive` | Derive a pkp pubkey with auth method data                            |
+|  `pkp-search` | `getlit pkp-search` | search for pkp information                                  | 
+|`docs` \| `doc` | `getlit docs`                       | 📖 Open the Lit Protocol documentation   |
 | `help` \|  `show` | `getlit help`    | 🆘 Show the help menu                     |
