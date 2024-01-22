@@ -21,5 +21,6 @@
   "configFile": "getlit.json",
   "sources":{
     "types": "https://actions-docs.litprotocol.com/types.d.ts"
-  }
+  },
+  "createNextPagesTemplate": "next-pages"
 }

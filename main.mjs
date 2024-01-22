@@ -13,6 +13,7 @@ import { watchFunc } from './scripts/watchFunc.mjs';
 import { deployFunc } from './scripts/deploy.mjs';
 import { deriveFunc } from './scripts/derive.mjs';
 import { pkpSearchFunc } from './scripts/pkp-search.mjs';
+import { createNextFunc } from './scripts/create-next-app.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -99,6 +100,13 @@ const commandMaps = [
     fn: pkpSearchFunc,
     description: '🔍 Search for information related to PKPS',
     usage: "getlit search --get --format --publicKey --authMethodId --userId --appId"
+  },
+  {
+    name: 'create-next-app',
+    aliases: [],
+    usage: 'getlit create-next-app',
+    description: '🏁 Initialise a new Lit next-app project',
+    fn: createNextFunc,
   }
 ];
 
