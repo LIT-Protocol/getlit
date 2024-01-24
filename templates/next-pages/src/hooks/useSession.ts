@@ -33,23 +33,27 @@ export default function useSession() {
         ).toISOString(); // 1 week
 
         // -- check permissions
-        const contractClient = new LitContracts();
-        await contractClient.connect();
+        if (process.env.NEXT_CHECK_PERMISSION) {
+          // if no signer is provided, it will attempt to use window.etheruem
+          const contractClient = new LitContracts();
+          await contractClient.connect();
 
-        const authId = await LitAuthClient.getAuthIdByAuthMethod(authMethod);
-        
-        const scopes = await contractClient.pkpPermissionsContract.read.getPermittedAuthMethodScopes(
-          pkp.tokenId,
-          authMethod.authMethodType,
-          authId,
-          3
-        );
+          const authId = await LitAuthClient.getAuthIdByAuthMethod(authMethod);
 
-        if (!scopes[1] && !scopes[2]) {
-          const msg = `Your PKP does not have the required permissions! Please use the 'addPermittedAuthMethodScope' method from the PKPPermissions contract to add the required permissions.\nRead more at https://developer.litprotocol.com/v3/sdk/wallets/auth-methods/#auth-method-scopes`;
-          console.error(msg);
-          alert(msg);
-          return;
+          const scopes =
+            await contractClient.pkpPermissionsContract.read.getPermittedAuthMethodScopes(
+              pkp.tokenId,
+              authMethod.authMethodType,
+              authId,
+              3
+            );
+
+          if (!scopes[1] && !scopes[2]) {
+            const msg = `Your PKP does not have the required permissions! Please use the 'addPermittedAuthMethodScope' method from the PKPPermissions contract to add the required permissions.\nRead more at https://developer.litprotocol.com/v3/sdk/wallets/auth-methods/#auth-method-scopes`;
+            console.error(msg);
+            alert(msg);
+            return;
+          }
         }
 
         // Generate session sigs

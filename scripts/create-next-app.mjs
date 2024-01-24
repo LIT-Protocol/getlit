@@ -83,7 +83,8 @@ export const createNextFunc = async ({ args }) => {
     // check if installLocation exists
     createDirs(installLocation);
     await fs.copy(templatePath, installLocation);        
-    runSyncCommandAtDirectory(`${packageManager} install`, installLocation);
+    runSyncCommandAtDirectory(`${packageManager} install`, installLocation, 'inherit');
+    runSyncCommandAtDirectory(`git init && git add . && git commit -m "Initial commit"`, installLocation);
     greenLog(`\n🎉 The project has been installed at ${installLocation}\n`);
     process.exit();
   } catch (e) {

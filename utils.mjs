@@ -218,8 +218,8 @@ export async function runCommand(command) {
  * run a command synchronously.
  * use this for like yarn install
  */
-export function runSyncCommandAtDirectory(command, direcotry) {
-  return execSync(command, { cwd: direcotry, stdio: 'inherit' });
+export function runSyncCommandAtDirectory(command, direcotry, stdio) {
+  return execSync(command, { cwd: direcotry, stdio: stdio });
 }
 
 /**
