@@ -4,6 +4,7 @@ import AuthMethods from './AuthMethods';
 import WalletMethods from './WalletMethods';
 import WebAuthn from './WebAuthn';
 import StytchOTP from './StytchOTP';
+import StytchEmailOTP from './StytchEmailOTP';
 
 interface LoginProps {
   handleGoogleLogin: () => Promise<void>;
@@ -52,13 +53,9 @@ export default function LoginMethods({
             </div>
           </>
         )}
-        {/* {view === 'phone' && (
-          <EmailSMSAuth
-            method={'phone'}
-            setView={setView}
-            authWithOTP={authWithOTP}
-          />
-        )} */}
+        {view === 'email' && (
+          <StytchEmailOTP authWithStytch={authWithStytch} setView={setView} />
+        )}
         {view === 'phone' && (
           <StytchOTP authWithStytch={authWithStytch} setView={setView} />
         )}
