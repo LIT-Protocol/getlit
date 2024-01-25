@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react';
-import { AuthMethod } from '@lit-protocol/types';
-import { getSessionSigs } from '../utils/lit';
-import { LitAbility, LitActionResource } from '@lit-protocol/auth-helpers';
-import { IRelayPKP } from '@lit-protocol/types';
-import { SessionSigs } from '@lit-protocol/types';
-import { LitContracts } from '@lit-protocol/contracts-sdk';
-import { LitAuthClient } from '@lit-protocol/lit-auth-client';
+import { useCallback, useState } from "react";
+import { AuthMethod } from "@lit-protocol/types";
+import { getSessionSigs } from "../utils/lit";
+import { LitAbility, LitActionResource } from "@lit-protocol/auth-helpers";
+import { IRelayPKP } from "@lit-protocol/types";
+import { SessionSigs } from "@lit-protocol/types";
+import { LitContracts } from "@lit-protocol/contracts-sdk";
+import { LitAuthClient } from "@lit-protocol/lit-auth-client";
 
 export default function useSession() {
   const [sessionSigs, setSessionSigs] = useState<SessionSigs>();
@@ -21,10 +21,10 @@ export default function useSession() {
       setError(undefined);
       try {
         // Prepare session sigs params
-        const chain = 'ethereum';
+        const chain = "ethereum";
         const resourceAbilities = [
           {
-            resource: new LitActionResource('*'),
+            resource: new LitActionResource("*"),
             ability: LitAbility.PKPSigning,
           },
         ];
@@ -68,7 +68,7 @@ export default function useSession() {
         });
 
         setSessionSigs(sessionSigs);
-      } catch (err) {
+      } catch (err: any) {
         setError(err);
       } finally {
         setLoading(false);

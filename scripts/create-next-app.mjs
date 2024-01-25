@@ -34,9 +34,6 @@ export const createNextFunc = async ({ args }) => {
 
   const PROMPT_DIR = args[0];
 
-  // const templatePath = askWhichTemplate();
-  const templatePath = getTemplatePath(LIT_CONFIG.createNextPagesTemplate);
-
   let _srcDir;
 
   if (PROMPT_DIR !== undefined) {
@@ -44,10 +41,12 @@ export const createNextFunc = async ({ args }) => {
   } else {
     usageLog({
       usage: `getlit create-next-app`,
-      options: [{
-        name: `path`,
-        description: `the directory to install the project in, default ./`
-      }],
+      options: [
+        {
+          name: `path`,
+          description: `the directory to install the project in, default ./`,
+        },
+      ],
     });
 
     // ask user which direcotry they want to install the project in, default ./
@@ -67,7 +66,13 @@ export const createNextFunc = async ({ args }) => {
 
   const installLocation = `${process.cwd()}/${_srcDir}`;
 
-  const { packageManager } = await inquirer.prompt([
+  const { router, packageManager } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'router',
+      message: 'Which router do you want to use?',
+      choices: ['app', 'pages'],
+    },
     {
       type: 'list',
       name: 'packageManager',
@@ -76,15 +81,28 @@ export const createNextFunc = async ({ args }) => {
     },
   ]);
 
+  const templatePath = getTemplatePath(
+    router === 'app'
+      ? LIT_CONFIG.createNextAppTemplate
+      : LIT_CONFIG.createNextPagesTemplate
+  );
+
   greenLog(`\nCreating a new Next app in ${installLocation}\n`);
 
   // copy the template to the current directory
   try {
     // check if installLocation exists
     createDirs(installLocation);
-    await fs.copy(templatePath, installLocation);        
-    runSyncCommandAtDirectory(`${packageManager} install`, installLocation, 'inherit');
-    runSyncCommandAtDirectory(`git init && git add . && git commit -m "Initial commit"`, installLocation);
+    await fs.copy(templatePath, installLocation);
+    runSyncCommandAtDirectory(
+      `${packageManager} install`,
+      installLocation,
+      'inherit'
+    );
+    runSyncCommandAtDirectory(
+      `git init && git add . && git commit -m "Initial commit"`,
+      installLocation
+    );
     greenLog(`\n🎉 The project has been installed at ${installLocation}\n`);
     process.exit();
   } catch (e) {

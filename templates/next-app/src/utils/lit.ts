@@ -30,7 +30,7 @@ export const litNodeClient: LitNodeClient = new LitNodeClient({
 export const litAuthClient: LitAuthClient = new LitAuthClient({
   litRelayConfig: {
     // relayUrl: 'http://localhost:3001',
-    relayApiKey: process.env.NEXT_PUBLIC_RELAY_API_KEY || 'test-api-key',
+    relayApiKey: 'test-api-key',
   },
   litNodeClient,
 });
@@ -123,16 +123,21 @@ export async function registerWebAuthn(): Promise<IRelayPKP> {
   // Register new WebAuthn credential
   const options = await provider.register();
 
+  const authMethodScopePrompt = prompt('Enter the auth method scope.\n0 - no permissions\n1 - to sign anything\n2 - to only sign messages. \n\nRead more at https://developer.litprotocol.com/v3/sdk/wallets/auth-methods/#auth-method-scopes') || '0';
+  const authMethodScope = parseInt(authMethodScopePrompt);
+
   // Verify registration and mint PKP through relay server
-  const txHash = await provider.verifyAndMintPKPThroughRelayer(options);
+  const txHash = await provider.verifyAndMintPKPThroughRelayer(options, {
+    permittedAuthMethodScopes: [[authMethodScope]],
+  })
   const response = await provider.relay.pollRequestUntilTerminalState(txHash);
   if (response.status !== 'Succeeded') {
     throw new Error('Minting failed');
   }
   const newPKP: IRelayPKP = {
-    tokenId: response.pkpTokenId,
-    publicKey: response.pkpPublicKey,
-    ethAddress: response.pkpEthAddress,
+    tokenId: response.pkpTokenId!,
+    publicKey: response.pkpPublicKey!,
+    ethAddress: response.pkpEthAddress!,
   };
   return newPKP;
 }
@@ -161,7 +166,7 @@ export async function authenticateWithStytch(
   userId?: string
 ) {
   const provider = litAuthClient.initProvider(ProviderType.StytchOtp, {
-    appId: process.env.NEXT_PUBLIC_STYTCH_PROJECT_ID,
+    appId: process.env.NEXT_PUBLIC_STYTCH_PROJECT_ID || '',
   });
   // @ts-ignore
   const authMethod = await provider?.authenticate({ accessToken, userId });
@@ -180,6 +185,7 @@ export async function getSessionSigs({
   authMethod: AuthMethod;
   sessionSigsParams: GetSessionSigsProps;
 }): Promise<SessionSigs> {
+
   // const provider = getProviderByAuthMethod(authMethod);
   // if (provider) {
   //   const sessionSigs = await provider.getSessionSigs({
@@ -225,7 +231,7 @@ export async function updateSessionSigs(
  * Fetch PKPs associated with given auth method
  */
 export async function getPKPs(authMethod: AuthMethod): Promise<IRelayPKP[]> {
-  const provider = getProviderByAuthMethod(authMethod);
+  const provider = getProviderByAuthMethod(authMethod)!;
   const allPKPs = await provider.fetchPKPsThroughRelayer(authMethod);
   return allPKPs;
 }
@@ -234,13 +240,11 @@ export async function getPKPs(authMethod: AuthMethod): Promise<IRelayPKP[]> {
  * Mint a new PKP for current auth method
  */
 export async function mintPKP(authMethod: AuthMethod): Promise<IRelayPKP> {
-  const provider = getProviderByAuthMethod(authMethod);
+  const provider = getProviderByAuthMethod(authMethod)!;
 
-  const authMethodScopePrompt = prompt(
-    'Enter the auth method scope.\n0 - no permissions\n1 - to sign anything\n2 - to only sign messages. \n\nRead more at https://developer.litprotocol.com/v3/sdk/wallets/auth-methods/#auth-method-scopes'
-  );
+  const authMethodScopePrompt = prompt('Enter the auth method scope.\n0 - no permissions\n1 - to sign anything\n2 - to only sign messages. \n\nRead more at https://developer.litprotocol.com/v3/sdk/wallets/auth-methods/#auth-method-scopes') || '0';
   const authMethodScope = parseInt(authMethodScopePrompt);
-  console.log('authMethodScope:', authMethodScope);
+  console.log("authMethodScope:", authMethodScope);
 
   let txHash: string;
 
@@ -266,9 +270,9 @@ export async function mintPKP(authMethod: AuthMethod): Promise<IRelayPKP> {
     throw new Error('Minting failed');
   }
   const newPKP: IRelayPKP = {
-    tokenId: response.pkpTokenId,
-    publicKey: response.pkpPublicKey,
-    ethAddress: response.pkpEthAddress,
+    tokenId: response.pkpTokenId!,
+    publicKey: response.pkpPublicKey!,
+    ethAddress: response.pkpEthAddress!,
   };
   return newPKP;
 }

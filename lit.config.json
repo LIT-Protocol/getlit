@@ -22,5 +22,6 @@
   "sources":{
     "types": "https://actions-docs.litprotocol.com/types.d.ts"
   },
-  "createNextPagesTemplate": "next-pages"
+  "createNextPagesTemplate": "next-pages",
+  "createNextAppTemplate": "next-app"
 }
