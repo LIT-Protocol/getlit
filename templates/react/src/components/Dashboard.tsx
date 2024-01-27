@@ -1,8 +1,8 @@
-import { IRelayPKP, SessionSigs } from '@lit-protocol/types';
-import { ethers } from 'ethers';
-import { useState } from 'react';
-import { PKPEthersWallet } from '@lit-protocol/pkp-ethers';
-import { useDisconnect } from 'wagmi';
+import { IRelayPKP, SessionSigs } from "@lit-protocol/types";
+import { ethers } from "ethers";
+import { useState } from "react";
+import { PKPEthersWallet } from "@lit-protocol/pkp-ethers";
+import { useDisconnect } from "wagmi";
 
 interface DashboardProps {
   currentAccount: IRelayPKP;
@@ -13,12 +13,12 @@ export default function Dashboard({
   currentAccount,
   sessionSigs,
 }: DashboardProps) {
-  const [message, setMessage] = useState<string>('Free the web!');
+  const [message] = useState<string>("Free the web!");
   const [signature, setSignature] = useState<string>();
-  const [recoveredAddress, setRecoveredAddress] = useState<string>();
+  const [, setRecoveredAddress] = useState<string>();
   const [verified, setVerified] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error>();
+  const [, setError] = useState<Error>();
 
   const { disconnectAsync } = useDisconnect();
 
@@ -46,9 +46,8 @@ export default function Dashboard({
       const verified =
         currentAccount.ethAddress.toLowerCase() === recoveredAddr.toLowerCase();
       setVerified(verified);
-    } catch (err: any) {
-      console.error(err);
-      setError(err);
+    } catch (err) {
+      if (err instanceof Error) setError(err);
     }
 
     setLoading(false);
@@ -58,14 +57,14 @@ export default function Dashboard({
     try {
       await disconnectAsync();
     } catch (err) {}
-    localStorage.removeItem('lit-wallet-sig');
+    localStorage.removeItem("lit-wallet-sig");
     location.reload();
   }
 
   return (
     <div className="container">
       <div className="logout-container">
-        <button className="btn btn--link" onClick={handleLogout}>
+        <button className="btn btn--link" type="button" onClick={handleLogout}>
           Logout
         </button>
       </div>
@@ -73,16 +72,17 @@ export default function Dashboard({
       <div className="details-card">
         <p>My address: {currentAccount.ethAddress.toLowerCase()}</p>
       </div>
-      <div className="divider"></div>
+      <div className="divider" />
       <div className="message-card">
         <p>Test out your wallet by signing this message:</p>
         <p className="message-card__prompt">{message}</p>
         <button
+          type="button"
           onClick={signMessageWithPKP}
           disabled={loading}
           className={`btn ${
-            signature ? (verified ? 'btn--success' : 'btn--error') : ''
-          } ${loading && 'btn--loading'}`}
+            signature ? (verified ? "btn--success" : "btn--error") : ""
+          } ${loading && "btn--loading"}`}
         >
           {signature ? (
             verified ? (
