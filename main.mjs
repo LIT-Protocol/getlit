@@ -14,6 +14,7 @@ import { deployFunc } from './scripts/deploy.mjs';
 import { deriveFunc } from './scripts/derive.mjs';
 import { pkpSearchFunc } from './scripts/pkp-search.mjs';
 import { createNextFunc } from './scripts/create-next-app.mjs';
+import { createReactFunc } from './scripts/create-react-app.mjs';
 
 const args = getArgs();
 globalThis.LIT_CONFIG = readProjectJsonFile('lit.config.json');
@@ -90,8 +91,7 @@ const commandMaps = [
     name: 'derive-pkp',
     aliases: ['pubkey'],
     usage: 'getlit derive-pkp --user_id --project_id --format',
-    description:
-      '🗝️ Derive a public key from a user id and application id',
+    description: '🗝️ Derive a public key from a user id and application id',
     fn: deriveFunc,
   },
   {
@@ -99,7 +99,8 @@ const commandMaps = [
     aliases: ['search', 'pkp-search'],
     fn: pkpSearchFunc,
     description: '🔍 Search for information related to PKPS',
-    usage: "getlit search --get --format --publicKey --authMethodId --userId --appId"
+    usage:
+      'getlit search --get --format --publicKey --authMethodId --userId --appId',
   },
   {
     name: 'create-next-app',
@@ -107,7 +108,14 @@ const commandMaps = [
     usage: 'getlit create-next-app',
     description: '🏁 Initialise a new Lit next-app project',
     fn: createNextFunc,
-  }
+  },
+  {
+    name: 'create-react-app',
+    aliases: [],
+    usage: 'getlit create-react-app',
+    description: '🏁 Initialise a new Lit react-app project',
+    fn: createReactFunc,
+  },
 ];
 
 const setup = () => {
