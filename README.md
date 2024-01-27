@@ -33,3 +33,5 @@ To use the GetLit CLI, navigate to a directory or your existing project, and the
 |  `pkp-search` | `getlit pkp-search` | search for pkp information                                  | 
 |`docs` \| `doc` | `getlit docs`                       | 📖 Open the Lit Protocol documentation   |
 | `help` \|  `show` | `getlit help`    | 🆘 Show the help menu                     |
+| `create-next-app` | `getlit create-next-app`    | 🏁 Initialise a new Lit next-app project |
+| `create-react-app` | `getlit create-react-app`    | 🏁 Initialise a new Lit react-app project  |
