@@ -50,7 +50,7 @@ export default function LoginView() {
   }
 
   function goToSignUp() {
-    router.push("/");
+    router.push("/signup");
   }
 
   useEffect(() => {
