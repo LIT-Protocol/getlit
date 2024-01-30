@@ -19,7 +19,7 @@ export const DOMAIN = import.meta.env.VITE_PROD_URL || "localhost";
 export const ORIGIN =
   import.meta.env.VITE_ENV === "production"
     ? `https://${DOMAIN}`
-    : `http://${DOMAIN}:3000`;
+    : `http://${DOMAIN}:5173`;
 
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
