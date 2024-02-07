@@ -17,14 +17,14 @@ import {
 
 export const DOMAIN = import.meta.env.VITE_PROD_URL || "localhost";
 export const ORIGIN =
-  import.meta.env.VITE_ENV === "production"
+  import.meta.env.PROD
     ? `https://${DOMAIN}`
-    : `http://${DOMAIN}:5173`;
+    : `https://${DOMAIN}:5173`;
 
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
   litNetwork: "cayenne",
-  debug: import.meta.env.VITE_ENV === "production" ? false : true,
+  debug: import.meta.env.DEV,
 });
 
 export const litAuthClient: LitAuthClient = new LitAuthClient({
