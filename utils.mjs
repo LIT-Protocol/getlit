@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { exec, spawn } from 'child_process';
+import { exec, execSync, spawn } from 'child_process';
 import { exit } from 'process';
 import readline from 'readline';
 import { join } from 'path';
@@ -215,6 +215,14 @@ export async function runCommand(command) {
 }
 
 /**
+ * run a command synchronously.
+ * use this for like yarn install
+ */
+export function runSyncCommandAtDirectory(command, direcotry, stdio) {
+  return execSync(command, { cwd: direcotry, stdio: stdio });
+}
+
+/**
  * Asynchronously runs the specified command and returns the output.
  *
  * @param {string} command The command to run.
@@ -393,7 +401,7 @@ export const greenLog = (msg, noDash = false) => {
 export const tableLog = (object, properties = undefined) => {
   properties && console.table(object, properties);
   !properties && console.table(object);
-}
+};
 
 export const usageLog = ({ usage, options }) => {
   const optionsStr = options.map((option) => {

@@ -1,5 +1,5 @@
 {
-  "releaseStage":"Beta",
+  "releaseStage": "Beta",
   "projectName": "lit_actions",
   "templatesRoot": "templates",
   "selectedTemplate": "ts",
@@ -19,7 +19,10 @@
   "defaultSrcTemplate": "templates/template.action.ts",
   "defaultTestTemplate": "templates/template.t.action.mjs",
   "configFile": "getlit.json",
-  "sources":{
+  "sources": {
     "types": "https://actions-docs.litprotocol.com/types.d.ts"
-  }
+  },
+  "createNextPagesTemplate": "next-pages",
+  "createNextAppTemplate": "next-app",
+  "createReactAppTemplate": "react"
 }
